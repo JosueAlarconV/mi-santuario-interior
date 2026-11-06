@@ -267,11 +267,6 @@ void main() {
     // Vignette
     float vignette = 1.0 - smoothstep(0.35, 1.45, length(uv));
     finalColor *= vignette;
-
-    // Smooth dark fade at top hero: upper hero stays velvety dark and clean, smoothly blending into cosmic ribbons below
-    float heroFade = smoothstep(0.96, 0.45, v_texCoord.y);
-    finalColor = mix(colDeepBg, finalColor, heroFade);
-
     finalColor = clamp(finalColor, 0.0, 1.0);
     
     gl_FragColor = vec4(finalColor, 1.0);
@@ -324,8 +319,6 @@ void main() {
 </script>
 </div>
 <!-- STITCH_SHADER_END:ANIMATION_47 -->
-<!-- Hero oscuro con desvanecimiento hacia los ribetes cósmicos -->
-<div aria-hidden="true" class="fixed top-0 inset-x-0 h-[480px] bg-gradient-to-b from-[#080214] via-[#080214]/90 via-65% to-transparent pointer-events-none z-[1]"></div>
 <div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
 <!-- Soft Floating Nebula Clouds -->
 <div class="absolute -top-20 left-1/4 w-[380px] h-[380px] rounded-full bg-gradient-to-br from-[#9D4EDD]/10 via-[#4A1278]/15 to-transparent blur-[85px] animate-nebula" style="animation-delay: 0s;"></div>
@@ -358,90 +351,149 @@ void main() {
 <!-- Hero Section -->
 <section class="relative flex flex-col items-center text-center pt-6 pb-2 px-2 space-y-6 overflow-visible"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-tr from-[#9D4EDD]/15 via-accent-magenta/10 to-transparent blur-3xl pointer-events-none -z-10"></div><div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1D1035]/50 border border-[#E0AAFF]/20 text-accent-lavender backdrop-blur-md shadow-[0_0_12px_rgba(157,78,221,0.15)]"><span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse"></span><span class="font-label-sm text-[10px] tracking-widest uppercase text-[#E0AAFF] font-medium">Espacio de quietud &amp; consciencia</span></div><div class="space-y-3 max-w-sm mx-auto"><h1 class="font-headline-lg-mobile text-[32px] leading-[42px] tracking-tight text-[#F7F2FA] font-normal">El viaje más profundo no es hacia afuera, sino <span class="italic font-display-mobile text-[36px] text-transparent bg-clip-text bg-gradient-to-r from-accent-lavender via-[#C77DFF] to-accent-magenta drop-shadow-[0_0_16px_rgba(224,170,255,0.4)]">hacia adentro</span>.</h1><p class="font-body-md text-sm text-[#D8CDE4] leading-relaxed max-w-[320px] mx-auto opacity-90">Herramientas conscientes, respiración somática y sabiduría atemporal para reconectar con tu esencia.</p></div><div class="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-1 max-w-xs mx-auto"><button class="cursor-pointer relative overflow-hidden w-full h-11 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-[#0F051D] font-label-md text-xs font-bold tracking-wider uppercase shadow-[0_0_20px_rgba(255,119,168,0.4)] hover:shadow-[0_0_28px_rgba(255,119,168,0.7)] flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-110" id="hero-journey-btn">Comenzar viaje interior</button><button class="cursor-pointer inline-flex items-center justify-center gap-2 py-2 px-4 rounded-full text-accent-lavender hover:text-white font-label-md text-xs tracking-wide transition-all group" id="guide-audio-btn"><span class="material-symbols-outlined text-[18px] text-accent-magenta transition-transform group-hover:scale-110">play_circle</span><span class="text-[#D8CDE4] group-hover:text-white transition-colors">Escuchar audio guía</span></button></div></section>
 <!-- Visual Showcase Centerpiece (Mystical Glassmorphic Card Preview) -->
-<section class="relative w-full rounded-2xl bg-[#1D1035]/60 border border-[#9D4EDD]/35 backdrop-blur-xl p-space-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col space-y-space-md">
-<!-- Ambient Luminous Halo Background -->
+<section class="relative w-full rounded-2xl bg-[#1D1035]/60 border border-[#9D4EDD]/35 backdrop-blur-xl p-space-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col space-y-space-md" id="quotes-oracle-section">
+<!-- Ambient Cosmic Halos -->
 <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-[#9D4EDD]/20 blur-3xl pointer-events-none"></div>
 <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-accent-magenta/15 blur-3xl pointer-events-none"></div>
 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-[#8A2BE2]/10 blur-3xl pointer-events-none"></div>
-<!-- Card Header -->
-<div class="flex items-center justify-between relative z-10">
-<div class="flex items-center gap-space-xs">
-<span class="w-2 h-2 rounded-full bg-accent-magenta shadow-[0_0_8px_#FF77A8]"></span>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#B592D9]">Ritual del día</span>
+<!-- Section Header -->
+<div class="flex flex-col items-center text-center space-y-2 relative z-10 pt-1">
+<div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1D1035]/95 border border-accent-magenta/35 text-accent-lavender backdrop-blur-md shadow-[0_0_12px_rgba(255,119,168,0.25)]">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse"></span>
+<span class="font-label-sm text-[10px] tracking-widest uppercase text-accent-magenta font-semibold">✦ REFLEXIONES DEL ALMA • RECORDATORIOS SAGRADOS</span>
 </div>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-highest/60 border border-[#9D4EDD]/30 text-accent-lavender font-label-sm text-label-sm backdrop-blur-md">
-        Edición Matutina
-      </span>
-</div>
-<!-- Title & Interactive Breathwork Centerpiece -->
-<div class="flex flex-col items-center text-center space-y-space-sm relative z-10 py-space-xs">
-<div class="space-y-1">
-<h2 class="font-headline-sm text-headline-sm text-[#F7F2FA] font-medium">Presencia y Apertura</h2>
-<p class="font-body-sm text-body-sm text-on-surface-variant">7 minutos • Respiración somática &amp; Meditación sonora</p>
-</div>
-<!-- Rhythm Switcher Pills -->
-<div class="flex items-center justify-center gap-2 pt-1">
-<button class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer" id="mode-box-btn">
-    4-4-4-4 Box Breathing
-  </button>
-<button class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/60 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer backdrop-blur-md" id="mode-calm-btn">
-    Calma 4-7-8
-  </button>
-</div>
-<!-- Guided Breathing Interactive Sphere Visualizer -->
-<div class="relative w-56 h-56 flex items-center justify-center my-2 cursor-pointer select-none group" id="breath-orb-container" title="Toca para pausar o reanudar">
-<!-- Outer Glow Rings -->
-<div class="absolute w-52 h-52 rounded-full bg-gradient-to-tr from-accent-magenta/35 via-cosmic-violet/30 to-accent-lavender/25 blur-2xl transition-all ease-in-out duration-1000 scale-100 opacity-80" id="orb-outer-glow"></div>
-<div class="absolute w-44 h-44 rounded-full border border-accent-magenta/30 bg-[#9D4EDD]/20 blur-md transition-all ease-in-out duration-1000 scale-100" id="orb-mid-glow"></div>
-<!-- Animated Scale Core Orb -->
-<div class="relative w-32 h-32 rounded-full shadow-[0_0_30px_rgba(157,78,221,0.5)] border border-[#E0AAFF]/40 flex flex-col items-center justify-center transition-all ease-in-out duration-1000 transform scale-100 bg-gradient-to-br from-[#2E1052]/90 via-[#1D1035]/90 to-[#4A1278]/90 backdrop-blur-md" id="orb-core">
-<!-- Subtle Inner Rings -->
-<div class="absolute inset-1.5 rounded-full border border-accent-lavender/20 pointer-events-none"></div>
-<div class="absolute inset-4 rounded-full border border-accent-magenta/25 pointer-events-none"></div>
-<!-- Center Icon & Instruction -->
-<span class="material-symbols-outlined text-accent-lavender text-[22px] mb-0.5 drop-shadow-[0_0_8px_#E0AAFF] transition-all duration-300" id="orb-icon">air</span>
-<span class="font-headline-sm text-base font-medium text-white tracking-tight drop-shadow-[0_0_6px_rgba(255,255,255,0.4)] transition-all duration-300" id="breath-phase-text">Inhala</span>
-<span class="font-label-sm text-label-sm text-accent-magenta font-bold mt-0.5 drop-shadow-[0_0_6px_#FF77A8]" id="breath-countdown">4s</span>
-</div>
-<!-- Touch Overlay Cue -->
-<div class="absolute -bottom-3 px-3 py-0.5 rounded-full bg-surface-container-lowest/85 backdrop-blur-md border border-[#9D4EDD]/40 shadow-lg text-[#D8CDE4] font-label-sm text-[10px] uppercase tracking-wider flex items-center gap-1.5">
-<span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse" id="orb-status-dot"></span>
-<span id="orb-status-text">• CICLO 1 • ACTIVO</span>
+<div class="space-y-1 max-w-sm">
+<h2 class="font-headline-sm text-headline-sm text-[#F7F2FA] font-medium">Ecos de Sabiduría Consciente</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Verdades atemporales para aquietar la mente, anclarte en el presente y recordar lo esencial.</p>
 </div>
 </div>
-<!-- Contemplative Quote -->
-<div class="px-space-sm max-w-xs pt-2">
-<p class="font-headline-sm italic text-body-lg text-[#F7F2FA] leading-snug drop-shadow-sm transition-opacity duration-500" id="ritual-quote">
-          «En la quietud habita la respuesta que el ruido dispersa.»
+<!-- Featured Spotlight Card -->
+<div class="relative z-10 rounded-2xl bg-surface-container-high/60 border border-accent-magenta/40 p-5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl flex flex-col space-y-4 overflow-hidden transition-all duration-300" id="featured-quote-container">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-lowest/80 border border-[#9D4EDD]/35 text-accent-lavender" id="featured-tag">✦ Perspectiva &amp; Calma</span>
+<span class="text-[#B592D9] font-mono" id="featured-counter">1 / 8</span>
+</div>
+<!-- Quote Body -->
+<div class="relative py-2 flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-[#9D4EDD]/40 text-4xl select-none leading-none">format_quote</span>
+<p class="font-headline-sm italic text-xl sm:text-2xl text-[#F7F2FA] leading-relaxed drop-shadow-sm min-h-[64px] flex items-center justify-center px-2 transition-opacity duration-300" id="featured-quote-text">
+        «Crea una vida que no te haga desear otra»
+      </p>
+<div class="w-10 h-[1.5px] bg-gradient-to-r from-transparent via-accent-magenta/60 to-transparent my-1"></div>
+<span class="font-label-sm text-[11px] text-[#B592D9] tracking-wider uppercase" id="featured-sub">Meditación diaria • Silencio &amp; Intención</span>
+</div>
+<!-- Actions & Cycle Controls -->
+<div class="flex flex-col gap-2.5 pt-1">
+<div class="flex items-center justify-between gap-2">
+<button class="w-9 h-9 rounded-full bg-surface-container/70 border border-[#9D4EDD]/40 text-[#D8CDE4] hover:text-white hover:border-accent-magenta/60 active:scale-95 flex items-center justify-center cursor-pointer transition-all" id="prev-quote-btn" title="Frase anterior">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+</button>
+<button class="flex-1 h-9 px-3 rounded-full bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-label-md text-xs font-semibold shadow-[0_0_14px_rgba(255,119,168,0.35)] hover:shadow-[0_0_20px_rgba(255,119,168,0.55)] active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer transition-all" id="next-quote-btn">
+<span>Siguiente reflexión ✧</span>
+</button>
+<button class="w-9 h-9 rounded-full bg-surface-container/70 border border-[#9D4EDD]/40 text-[#D8CDE4] hover:text-white hover:border-accent-magenta/60 active:scale-95 flex items-center justify-center cursor-pointer transition-all" id="share-quote-btn" title="Copiar reflexión">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<div class="flex items-center justify-center gap-2">
+<button class="flex-1 py-1.5 px-3 rounded-full bg-surface-container-lowest/80 border border-[#9D4EDD]/30 hover:border-accent-lavender/50 text-[#D8CDE4] hover:text-white font-label-sm text-[11px] flex items-center justify-center gap-1.5 cursor-pointer transition-all" id="save-journal-btn">
+<span class="material-symbols-outlined text-[14px] text-accent-magenta">edit_note</span>
+<span>Guardar en Diario</span>
+</button>
+<button class="flex-1 py-1.5 px-3 rounded-full bg-surface-container-lowest/80 border border-[#9D4EDD]/30 hover:border-accent-lavender/50 text-[#D8CDE4] hover:text-white font-label-sm text-[11px] flex items-center justify-center gap-1.5 cursor-pointer transition-all" id="meditate-quote-btn">
+<span class="material-symbols-outlined text-[14px] text-secondary">self_improvement</span>
+<span>Meditar en esta frase</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Grid of All 8 Quotes (Masonry / Cards preview) -->
+<div class="relative z-10 space-y-2 pt-1">
+<div class="flex items-center justify-between px-1">
+<span class="font-label-sm text-[11px] text-[#B592D9] uppercase tracking-wider font-semibold">Colección Completa de Sabiduría</span>
+<span class="text-[11px] text-[#B592D9]/70">Toca una frase para enfocarla</span>
+</div>
+<div class="grid grid-cols-1 gap-2.5" id="quotes-grid-container">
+<!-- Quote Card 1 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-accent-magenta/40 hover:border-accent-magenta shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="0">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-accent-magenta">✦ Propósito &amp; Vida</span>
+<span class="material-symbols-outlined text-[16px] text-accent-lavender opacity-60 group-hover:opacity-100 transition-opacity">sparkles</span>
+</div>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «Crea una vida que no te haga desear otra»
         </p>
 </div>
+<!-- Quote Card 2 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-[#9D4EDD]/25 hover:border-accent-magenta/60 shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-[#B592D9]">✦ Perspectiva &amp; Calma</span>
+<span class="material-symbols-outlined text-[16px] text-[#B592D9] opacity-40 group-hover:opacity-100 transition-opacity">spa</span>
 </div>
-<!-- Audio Player Interactive Component -->
-<div class="relative z-10 bg-surface-container-low/70 border border-[#9D4EDD]/30 rounded-xl p-space-md space-y-space-sm shadow-inner backdrop-blur-md" id="audio-player">
-<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
-<span class="font-mono" id="player-current-time">03:42</span>
-<!-- Frequency 432Hz button toggleable -->
-<button class="flex items-center gap-1.5 text-accent-lavender px-2.5 py-0.5 rounded-full bg-surface-container-high/60 border border-[#9D4EDD]/40 hover:border-accent-magenta/60 transition-all cursor-pointer" id="freq-toggle-btn" title="Activar/Desactivar Frecuencia 432Hz">
-<span class="material-symbols-outlined text-[16px] text-accent-magenta drop-shadow-[0_0_4px_#FF77A8] animate-pulse" id="freq-wave-icon">waves</span>
-<span class="font-label-sm text-label-sm tracking-wide" id="freq-label">Frecuencia 432Hz</span>
-</button>
-<span class="font-mono" id="player-total-time">07:00</span>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «nos estresamos demasiado por una vida que puede terminar en cualquier momento»
+        </p>
 </div>
-<!-- Audio Progress Bar with custom track -->
-<div class="relative w-full h-2 rounded-full bg-surface-container-highest/80 cursor-pointer overflow-hidden border border-white/5" id="audio-scrubber">
-<div class="h-full bg-gradient-to-r from-secondary to-accent-magenta rounded-full transition-all duration-300 shadow-[0_0_12px_#FF77A8]" id="audio-progress-fill" style="width: 52.8%;"></div>
+<!-- Quote Card 3 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-[#9D4EDD]/25 hover:border-accent-magenta/60 shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-accent-magenta">✦ Presencia Vital</span>
+<span class="material-symbols-outlined text-[16px] text-[#B592D9] opacity-40 group-hover:opacity-100 transition-opacity">favorite</span>
 </div>
-<!-- Player Controls -->
-<div class="flex items-center justify-between pt-1">
-<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 active:scale-90 transition-all cursor-pointer" id="btn-back-10" title="Retroceder 10 segundos">
-<span class="material-symbols-outlined text-[20px]">replay_10</span>
-</button>
-<button class="w-12 h-12 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-white flex items-center justify-center shadow-[0_0_18px_rgba(255,119,168,0.5)] active:scale-95 transition-all hover:brightness-110 cursor-pointer" id="play-pause-btn" title="Iniciar o pausar respiración y audio">
-<span class="material-symbols-outlined text-[26px]" id="play-icon" style="font-variation-settings: 'FILL' 1;">pause</span>
-</button>
-<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 active:scale-90 transition-all cursor-pointer" id="btn-fwd-10" title="Avanzar 10 segundos">
-<span class="material-symbols-outlined text-[20px]">forward_10</span>
-</button>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «Asegurate de vivir»
+        </p>
+</div>
+<!-- Quote Card 4 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-[#9D4EDD]/25 hover:border-accent-magenta/60 shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="3">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-secondary">✦ Compasión &amp; Empatía</span>
+<span class="material-symbols-outlined text-[16px] text-[#B592D9] opacity-40 group-hover:opacity-100 transition-opacity">psychology</span>
+</div>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «cada persona sobrevive y lucha contra algo de lo que nunca habla»
+        </p>
+</div>
+<!-- Quote Card 5 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-[#9D4EDD]/25 hover:border-accent-magenta/60 shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="4">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-accent-lavender">✦ Trascendencia</span>
+<span class="material-symbols-outlined text-[16px] text-[#B592D9] opacity-40 group-hover:opacity-100 transition-opacity">hourglass_top</span>
+</div>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «tu tiempo es limitado, procura satisfacer tu alma»
+        </p>
+</div>
+<!-- Quote Card 6 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-[#9D4EDD]/25 hover:border-accent-magenta/60 shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-accent-magenta">✦ Asombro Cotidiano</span>
+<span class="material-symbols-outlined text-[16px] text-[#B592D9] opacity-40 group-hover:opacity-100 transition-opacity">wb_sunny</span>
+</div>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «aprecia la belleza de lo cotidiano»
+        </p>
+</div>
+<!-- Quote Card 7 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-[#9D4EDD]/25 hover:border-accent-magenta/60 shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="6">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-secondary">✦ Amor &amp; Vínculos</span>
+<span class="material-symbols-outlined text-[16px] text-[#B592D9] opacity-40 group-hover:opacity-100 transition-opacity">diversity_1</span>
+</div>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «dale tiempo a tus vínculos que te sumen»
+        </p>
+</div>
+<!-- Quote Card 8 -->
+<div class="quote-card cursor-pointer p-3.5 rounded-xl bg-surface-container/50 border border-[#9D4EDD]/25 hover:border-accent-magenta/60 shadow-sm backdrop-blur-md transition-all duration-200 flex flex-col space-y-1.5 group" data-index="7">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-accent-magenta">✦ Dicha Presente</span>
+<span class="material-symbols-outlined text-[16px] text-[#B592D9] opacity-40 group-hover:opacity-100 transition-opacity">celebration</span>
+</div>
+<p class="font-headline-sm italic text-[15px] text-[#F7F2FA] leading-snug group-hover:text-accent-lavender transition-colors">
+          «haz lo que te haga feliz, el tiempo perdido no se recupera»
+        </p>
+</div>
 </div>
 </div>
 </section>
@@ -538,7 +590,7 @@ void main() {
 </div>
 </section>
 </div>
-</main><nav class="fixed bottom-0 w-full z-40 pb-safe bg-[#0F051D]/80 backdrop-blur-xl border-t border-[#9D4EDD]/25 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-accent-magenta font-semibold"><div class="flex justify-around items-center h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 transition-colors text-accent-magenta font-semibold drop-shadow-[0_0_8px_rgba(255,119,168,0.5)] cursor-pointer" data-path="santuario" href="#"><span class="material-symbols-outlined text-[22px]">spa</span><span class="font-label-sm text-label-sm">Santuario</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="calma" href="TranquilidadYCalmaMental/code.html"><span class="material-symbols-outlined text-[22px]">air</span><span class="font-label-sm text-label-sm">Calma</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="claridad" href="ClaridadYDireccionInterior/code.html"><span class="material-symbols-outlined text-[22px]">explore</span><span class="font-label-sm text-label-sm">Claridad</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="expansion" href="ExpancionDeConcienciaPlena/code.html"><span class="material-symbols-outlined text-[22px]">all_inclusive</span><span class="font-label-sm text-label-sm">Expansión</span></a></div></nav>
+</main><nav class="fixed bottom-0 w-full z-40 pb-safe bg-[#0F051D]/80 backdrop-blur-xl border-t border-[#9D4EDD]/25 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-accent-magenta font-semibold"><div class="flex justify-around items-center h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 transition-colors text-accent-magenta font-semibold drop-shadow-[0_0_8px_rgba(255,119,168,0.5)] cursor-pointer" data-path="santuario" href="#"><span class="material-symbols-outlined text-[22px]">spa</span><span class="font-label-sm text-label-sm">Santuario</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="calma" href="TranquilidadYCalmaMental/code.html"><span class="material-symbols-outlined text-[22px]">self_improvement</span><span class="font-label-sm text-label-sm">Calma</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="claridad" href="ClaridadYDireccionInterior/code.html"><span class="material-symbols-outlined text-[22px]">edit_note</span><span class="font-label-sm text-label-sm">Claridad</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="expansion" href="ExpancionDeConcienciaPlena/code.html"><span class="material-symbols-outlined text-[22px]">nest_clock_farsight_analog</span><span class="font-label-sm text-label-sm">Expansión</span></a></div></nav>
 <!-- Interactive Journey Portal Modal -->
 <div class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300" id="journey-modal">
 <div class="relative w-full max-w-sm rounded-3xl bg-gradient-to-b from-[#1D1035]/95 via-[#150A26]/95 to-[#0F051D]/98 border border-[#9D4EDD]/45 p-6 shadow-[0_16px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl flex flex-col space-y-5 portal-pulse transform scale-95 transition-transform duration-300" id="journey-modal-card">
@@ -760,7 +812,6 @@ void main() {
 
     let currentAnchorFreq = 432;
     let currentAnchorName = 'Tranquilidad y Calma Mental';
-    let currentAnchorType = 'calma';
 
     function showSacredToast(text) {
       if (!sacredToast) return;
@@ -867,11 +918,11 @@ void main() {
         }
 
         baseDroneFreq = currentAnchorFreq;
-        const freqLabel = document.getElementById('freq-label');
-        if (freqLabel) freqLabel.textContent = `Frecuencia ${currentAnchorFreq}Hz`;
         playTibetanChime(currentAnchorFreq);
       });
     });
+
+    let currentAnchorType = 'calma';
 
     if (enterSanctuaryBtn) {
       enterSanctuaryBtn.addEventListener('click', function(e) {
@@ -903,12 +954,6 @@ void main() {
         }
 
         closeJourneyModal();
-
-        const showcase = document.querySelector('section:nth-of-type(2)');
-        if (showcase) {
-          showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        showSacredToast('✦ Portal de Inmersión activado: ' + currentAnchorName);
       });
     }
 
@@ -916,298 +961,146 @@ void main() {
       guideAudioBtn.addEventListener('click', function(e) {
         e.preventDefault();
         playTibetanChime(432);
-        showSacredToast('✦ Guía de inmersión iniciada (432Hz)');
-        if (!isPlaying) togglePlayback();
+        startDrone(432);
+        showSacredToast('✦ Audio guía y resonancia 432Hz iniciados');
       });
     }
 
-    // --- Ritual del Día: Interactive Breathwork Engine & Player ---
-    const orbContainer = document.getElementById('breath-orb-container');
-    const orbCore = document.getElementById('orb-core');
-    const orbMidGlow = document.getElementById('orb-mid-glow');
-    const orbOuterGlow = document.getElementById('orb-outer-glow');
-    const phaseText = document.getElementById('breath-phase-text');
-    const countdownEl = document.getElementById('breath-countdown');
-    const orbStatusDot = document.getElementById('orb-status-dot');
-    const orbStatusText = document.getElementById('orb-status-text');
-    const orbIcon = document.getElementById('orb-icon');
-    const modeBoxBtn = document.getElementById('mode-box-btn');
-    const modeCalmBtn = document.getElementById('mode-calm-btn');
-    const ritualQuote = document.getElementById('ritual-quote');
-
-    // Audio Player Elements
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const playIcon = document.getElementById('play-icon');
-    const progressFill = document.getElementById('audio-progress-fill');
-    const currentTimeEl = document.getElementById('player-current-time');
-    const totalTimeEl = document.getElementById('player-total-time');
-    const scrubber = document.getElementById('audio-scrubber');
-    const btnBack10 = document.getElementById('btn-back-10');
-    const btnFwd10 = document.getElementById('btn-fwd-10');
-    const freqToggleBtn = document.getElementById('freq-toggle-btn');
-    const freqWaveIcon = document.getElementById('freq-wave-icon');
-    const freqLabel = document.getElementById('freq-label');
-
-    // Quotes for patterns
-    const quotes = {
-      box: '«En la quietud habita la respuesta que el ruido dispersa.»',
-      calm: '«Exhala el pasado, inhala la paz pura del instante presente.»'
-    };
-
-    // Breathwork Patterns
-    // 4-4-4-4 Box Breathing: Inhala (4s), Sostén (4s), Exhala (4s), Sostén en vacío (4s)
-    const boxPattern = [
-      { name: 'Inhala', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'north', stateType: 'inhale' },
-      { name: 'Sostén', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'pause', stateType: 'hold' },
-      { name: 'Exhala', duration: 4, scale: 0.90, glowScale: 0.95, icon: 'south', stateType: 'exhale' },
-      { name: 'Sostén en vacío', duration: 4, scale: 0.90, glowScale: 0.95, icon: 'horizontal_rule', stateType: 'hold_empty' }
+    // --- Ecos de Sabiduría Consciente: 8 Sacred Quotes Oracle Engine ---
+    const quotesData = [
+      {
+        quote: "«Crea una vida que no te haga desear otra»",
+        tag: "✦ Propósito & Vida",
+        sub: "Meditación diaria • Silencio & Intención"
+      },
+      {
+        quote: "«nos estresamos demasiado por una vida que puede terminar en cualquier momento»",
+        tag: "✦ Perspectiva & Calma",
+        sub: "Desapego sereno • Respiración consciente"
+      },
+      {
+        quote: "«Asegurate de vivir»",
+        tag: "✦ Presencia Vital",
+        sub: "Despertar del instante • Gratitud pura"
+      },
+      {
+        quote: "«cada persona sobrevive y lucha contra algo de lo que nunca habla»",
+        tag: "✦ Compasión & Empatía",
+        sub: "Bondad amorosa • Conexión humana"
+      },
+      {
+        quote: "«tu tiempo es limitado, procura satisfacer tu alma»",
+        tag: "✦ Trascendencia",
+        sub: "Alineación interna • Verdad esencial"
+      },
+      {
+        quote: "«aprecia la belleza de lo cotidiano»",
+        tag: "✦ Asombro Cotidiano",
+        sub: "Mente de principiante • Luz en lo simple"
+      },
+      {
+        quote: "«dale tiempo a tus vínculos que te sumen»",
+        tag: "✦ Amor & Vínculos",
+        sub: "Nutrición del corazón • Presencia compartida"
+      },
+      {
+        quote: "«haz lo que te haga feliz, el tiempo perdido no se recupera»",
+        tag: "✦ Dicha Presente",
+        sub: "Valentía del ser • Fluir sin culpa"
+      }
     ];
 
-    // Calma 4-7-8: Inhala (4s), Sostén (7s), Exhala (8s)
-    const calmPattern = [
-      { name: 'Inhala', duration: 4, scale: 1.30, glowScale: 1.40, icon: 'north', stateType: 'inhale' },
-      { name: 'Sostén', duration: 7, scale: 1.30, glowScale: 1.40, icon: 'pause', stateType: 'hold' },
-      { name: 'Exhala', duration: 8, scale: 0.88, glowScale: 0.92, icon: 'south', stateType: 'exhale' }
-    ];
+    let currentQuoteIdx = 0;
+    const featuredText = document.getElementById('featured-quote-text');
+    const featuredTag = document.getElementById('featured-tag');
+    const featuredSub = document.getElementById('featured-sub');
+    const featuredCounter = document.getElementById('featured-counter');
+    const prevQuoteBtn = document.getElementById('prev-quote-btn');
+    const nextQuoteBtn = document.getElementById('next-quote-btn');
+    const shareQuoteBtn = document.getElementById('share-quote-btn');
+    const saveJournalBtn = document.getElementById('save-journal-btn');
+    const meditateQuoteBtn = document.getElementById('meditate-quote-btn');
+    const quoteCards = document.querySelectorAll('.quote-card');
 
-    let currentPattern = boxPattern;
-    let currentStepIdx = 0;
-    let remainingStepSeconds = currentPattern[0].duration;
-    let cycleCount = 1;
-    let isPlaying = true;
-    let breathTimer = null;
+    function updateFeaturedQuote(index, playTone = true) {
+      if (index < 0) index = quotesData.length - 1;
+      if (index >= quotesData.length) index = 0;
+      currentQuoteIdx = index;
+      const data = quotesData[currentQuoteIdx];
 
-    // Global session timer: 03:42 = 222 seconds out of 420 seconds (07:00)
-    let sessionCurrentSec = 222;
-    const sessionTotalSec = 420;
+      if (playTone) playClickSound();
 
-    function formatTime(sec) {
-      const m = Math.floor(sec / 60).toString().padStart(2, '0');
-      const s = Math.floor(sec % 60).toString().padStart(2, '0');
-      return `${m}:${s}`;
-    }
-
-    function updatePlayerProgress() {
-      if (currentTimeEl) currentTimeEl.textContent = formatTime(sessionCurrentSec);
-      if (totalTimeEl) totalTimeEl.textContent = formatTime(sessionTotalSec);
-      if (progressFill) {
-        const pct = Math.min(100, Math.max(0, (sessionCurrentSec / sessionTotalSec) * 100));
-        progressFill.style.width = pct + '%';
-      }
-    }
-
-    function applyPhaseStyles(step) {
-      if (!orbCore) return;
-      const durationMs = step.duration * 1000;
-      orbCore.style.transitionDuration = durationMs + 'ms';
-      orbMidGlow.style.transitionDuration = durationMs + 'ms';
-      orbOuterGlow.style.transitionDuration = durationMs + 'ms';
-
-      // Visual glow / expansion styling depending on active phase
-      orbCore.classList.remove('hold-gold-glow');
-      if (step.stateType === 'inhale') {
-        // Expande con resplandor magenta/lavanda
-        orbCore.style.borderColor = 'rgba(224, 170, 255, 0.7)';
-        orbCore.style.boxShadow = '0 0 38px rgba(255, 119, 168, 0.75), inset 0 0 20px rgba(224, 170, 255, 0.5)';
-        orbOuterGlow.style.opacity = '0.9';
-        orbOuterGlow.style.background = 'radial-gradient(circle, rgba(255,119,168,0.5) 0%, rgba(157,78,221,0.35) 60%, transparent 80%)';
-      } else if (step.stateType === 'hold' || step.stateType === 'hold_empty') {
-        // Pulso dorado suave estático
-        orbCore.classList.add('hold-gold-glow');
-        orbCore.style.borderColor = 'rgba(255, 215, 0, 0.6)';
-        orbOuterGlow.style.opacity = '0.75';
-        orbOuterGlow.style.background = 'radial-gradient(circle, rgba(255,215,0,0.3) 0%, rgba(199,125,255,0.3) 60%, transparent 80%)';
-      } else if (step.stateType === 'exhale') {
-        // Contracción serena
-        orbCore.style.borderColor = 'rgba(157, 78, 221, 0.5)';
-        orbCore.style.boxShadow = '0 0 24px rgba(157, 78, 221, 0.4), inset 0 0 12px rgba(15, 5, 29, 0.8)';
-        orbOuterGlow.style.opacity = '0.45';
-        orbOuterGlow.style.background = 'radial-gradient(circle, rgba(157,78,221,0.25) 0%, rgba(46,16,82,0.2) 60%, transparent 80%)';
+      if (featuredText) {
+        featuredText.style.opacity = '0';
+        setTimeout(() => {
+          featuredText.textContent = data.quote;
+          if (featuredTag) featuredTag.textContent = data.tag;
+          if (featuredSub) featuredSub.textContent = data.sub;
+          if (featuredCounter) featuredCounter.textContent = (currentQuoteIdx + 1) + ' / ' + quotesData.length;
+          featuredText.style.opacity = '1';
+        }, 150);
       }
 
-      orbCore.style.transform = `scale(${step.scale})`;
-      orbMidGlow.style.transform = `scale(${step.glowScale})`;
-      orbOuterGlow.style.transform = `scale(${step.glowScale * 1.15})`;
-
-      phaseText.textContent = step.name;
-      orbIcon.textContent = step.icon;
-      countdownEl.textContent = remainingStepSeconds + 's';
-    }
-
-    function tickTimer() {
-      if (!isPlaying) return;
-
-      // 1. Advance global player seconds
-      sessionCurrentSec++;
-      if (sessionCurrentSec > sessionTotalSec) {
-        sessionCurrentSec = 0;
-      }
-      updatePlayerProgress();
-
-      // 2. Breathwork countdown
-      countdownEl.textContent = remainingStepSeconds + 's';
-      remainingStepSeconds--;
-
-      if (remainingStepSeconds < 0) {
-        currentStepIdx = (currentStepIdx + 1) % currentPattern.length;
-        if (currentStepIdx === 0) {
-          cycleCount++;
-          if (orbStatusText) orbStatusText.textContent = `• CICLO ${cycleCount} • ACTIVO`;
-        }
-        const nextStep = currentPattern[currentStepIdx];
-        remainingStepSeconds = nextStep.duration;
-
-        // Play gentle chime on phase transition
-        playTibetanChime(baseDroneFreq);
-        applyPhaseStyles(nextStep);
-      }
-    }
-
-    function startBreathing() {
-      if (breathTimer) clearInterval(breathTimer);
-      applyPhaseStyles(currentPattern[currentStepIdx]);
-      breathTimer = setInterval(tickTimer, 1000);
-
-      if (orbStatusDot) {
-        orbStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse';
-      }
-      if (orbStatusText) orbStatusText.textContent = `• CICLO ${cycleCount} • ACTIVO`;
-
-      if (isDroneSoundActive) {
-        startDrone(baseDroneFreq);
-      }
-    }
-
-    function pauseBreathing() {
-      if (breathTimer) clearInterval(breathTimer);
-      if (orbCore) {
-        orbCore.style.transitionDuration = '400ms';
-        orbMidGlow.style.transitionDuration = '400ms';
-        orbOuterGlow.style.transitionDuration = '400ms';
-      }
-      if (orbStatusDot) {
-        orbStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-[#7B629E]';
-      }
-      if (orbStatusText) orbStatusText.textContent = '• EN PAUSA • TOCA PARA CONTINUAR';
-      phaseText.textContent = 'Pausa';
-      orbIcon.textContent = 'play_arrow';
-
-      stopDrone();
-    }
-
-    function togglePlayback() {
-      isPlaying = !isPlaying;
-      if (isPlaying) {
-        if (playIcon) playIcon.textContent = 'pause';
-        startBreathing();
-      } else {
-        if (playIcon) playIcon.textContent = 'play_arrow';
-        pauseBreathing();
-      }
-    }
-
-    // Connect Orb Click & Main Audio Button
-    if (orbContainer) {
-      orbContainer.addEventListener('click', togglePlayback);
-    }
-    if (playPauseBtn) {
-      playPauseBtn.addEventListener('click', togglePlayback);
-    }
-
-    // Pattern Switchers
-    function setPattern(pattern, isBox) {
-      playClickSound();
-      currentPattern = pattern;
-      currentStepIdx = 0;
-      remainingStepSeconds = currentPattern[0].duration;
-      cycleCount = 1;
-
-      if (isBox) {
-        modeBoxBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer';
-        modeCalmBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/60 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer backdrop-blur-md';
-        if (ritualQuote) {
-          ritualQuote.style.opacity = '0';
-          setTimeout(() => {
-            ritualQuote.textContent = quotes.box;
-            ritualQuote.style.opacity = '1';
-          }, 250);
-        }
-      } else {
-        modeCalmBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer';
-        modeBoxBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/60 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer backdrop-blur-md';
-        if (ritualQuote) {
-          ritualQuote.style.opacity = '0';
-          setTimeout(() => {
-            ritualQuote.textContent = quotes.calm;
-            ritualQuote.style.opacity = '1';
-          }, 250);
-        }
-      }
-
-      if (isPlaying) {
-        startBreathing();
-      } else {
-        applyPhaseStyles(currentPattern[0]);
-      }
-    }
-
-    if (modeBoxBtn) {
-      modeBoxBtn.addEventListener('click', () => setPattern(boxPattern, true));
-    }
-    if (modeCalmBtn) {
-      modeCalmBtn.addEventListener('click', () => setPattern(calmPattern, false));
-    }
-
-    // Skip Buttons (-10s / +10s)
-    if (btnBack10) {
-      btnBack10.addEventListener('click', () => {
-        playClickSound();
-        sessionCurrentSec = Math.max(0, sessionCurrentSec - 10);
-        updatePlayerProgress();
-      });
-    }
-    if (btnFwd10) {
-      btnFwd10.addEventListener('click', () => {
-        playClickSound();
-        sessionCurrentSec = Math.min(sessionTotalSec, sessionCurrentSec + 10);
-        updatePlayerProgress();
-      });
-    }
-
-    // Audio Scrubber Interactive Click
-    if (scrubber) {
-      scrubber.addEventListener('click', function(e) {
-        playClickSound();
-        const rect = scrubber.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const ratio = Math.max(0, Math.min(1, clickX / rect.width));
-        sessionCurrentSec = Math.floor(ratio * sessionTotalSec);
-        updatePlayerProgress();
-      });
-    }
-
-    // Frequency 432Hz button toggle
-    if (freqToggleBtn) {
-      freqToggleBtn.addEventListener('click', function() {
-        playClickSound();
-        isDroneSoundActive = !isDroneSoundActive;
-        if (isDroneSoundActive) {
-          if (freqWaveIcon) {
-            freqWaveIcon.className = 'material-symbols-outlined text-[16px] text-accent-magenta drop-shadow-[0_0_4px_#FF77A8] animate-pulse';
-          }
-          if (freqLabel) freqLabel.className = 'font-label-sm text-label-sm tracking-wide text-accent-lavender';
-          if (isPlaying) startDrone(baseDroneFreq);
-          showSacredToast(`✦ Tono ${baseDroneFreq}Hz Activado`);
+      quoteCards.forEach((c, idx) => {
+        if (idx === currentQuoteIdx) {
+          c.classList.add('border-accent-magenta', 'bg-surface-container-high/80', 'shadow-[0_0_16px_rgba(255,119,168,0.3)]');
+          c.classList.remove('border-[#9D4EDD]/25', 'bg-surface-container/50');
         } else {
-          if (freqWaveIcon) {
-            freqWaveIcon.className = 'material-symbols-outlined text-[16px] text-[#7B629E]';
-          }
-          if (freqLabel) freqLabel.className = 'font-label-sm text-label-sm tracking-wide text-[#7B629E]';
-          stopDrone();
-          showSacredToast('✦ Tono sonoro silenciado');
+          c.classList.remove('border-accent-magenta', 'bg-surface-container-high/80', 'shadow-[0_0_16px_rgba(255,119,168,0.3)]');
+          c.classList.add('border-[#9D4EDD]/25', 'bg-surface-container/50');
         }
       });
     }
+
+    if (nextQuoteBtn) {
+      nextQuoteBtn.addEventListener('click', () => updateFeaturedQuote(currentQuoteIdx + 1));
+    }
+    if (prevQuoteBtn) {
+      prevQuoteBtn.addEventListener('click', () => updateFeaturedQuote(currentQuoteIdx - 1));
+    }
+    if (shareQuoteBtn) {
+      shareQuoteBtn.addEventListener('click', () => {
+        const text = quotesData[currentQuoteIdx].quote + ' — Aura Santuario';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            playTibetanChime(528);
+            showSacredToast('✦ Reflexión copiada al portapapeles');
+          }).catch(() => {
+            showSacredToast('✦ Reflexión lista para compartir');
+          });
+        } else {
+          showSacredToast('✦ ' + quotesData[currentQuoteIdx].quote);
+        }
+      });
+    }
+    if (saveJournalBtn) {
+      saveJournalBtn.addEventListener('click', () => {
+        playTibetanChime(432);
+        try {
+          const saved = JSON.parse(localStorage.getItem('aura_saved_quotes') || '[]');
+          saved.push({ text: quotesData[currentQuoteIdx].quote, date: new Date().toISOString() });
+          localStorage.setItem('aura_saved_quotes', JSON.stringify(saved));
+        } catch(e){}
+        showSacredToast('✦ Reflexión guardada en tu Diario Interior');
+      });
+    }
+    if (meditateQuoteBtn) {
+      meditateQuoteBtn.addEventListener('click', () => {
+        playTibetanChime(528);
+        startDrone(528);
+        showSacredToast('✦ Meditando en esta verdad (528Hz)...');
+      });
+    }
+
+    quoteCards.forEach((c, idx) => {
+      c.addEventListener('click', () => {
+        updateFeaturedQuote(idx);
+        const container = document.getElementById('featured-quote-container');
+        if (container) {
+          container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
 
     // --- Interactive Pillars of Introspection ---
     const pillarCards = document.querySelectorAll('.pillar-card');
@@ -1259,8 +1152,7 @@ void main() {
       });
     }
 
-    // Auto-initialize timer and breath on page load
-    updatePlayerProgress();
-    startBreathing();
+    // Initialize first quote spotlight
+    updateFeaturedQuote(0, false);
   })();
 </script></body></html>
