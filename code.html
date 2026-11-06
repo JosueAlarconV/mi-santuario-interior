@@ -598,6 +598,14 @@
           return;
         }
 
+        if (currentAnchorType === 'claridad') {
+          showSacredToast('✦ Viajando a Claridad & Dirección Interior...');
+          setTimeout(() => {
+            window.location.href = 'ClaridadYDireccionInterior/code.html';
+          }, 450);
+          return;
+        }
+
         if (currentAnchorType === 'expansion') {
           showSacredToast('✦ Viajando a Expansión & Consciencia Plena...');
           setTimeout(() => {

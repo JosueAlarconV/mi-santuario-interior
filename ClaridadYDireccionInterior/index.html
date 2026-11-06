@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="mobile_tab" name="shell-type"/>
+<title>Aura — Claridad y Dirección Interior</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0F051D",
+            "surface-dim": "#0A0214",
+            "background": "#0F051D",
+            "surface-container-lowest": "#080112",
+            "surface-container-low": "#150A26",
+            "surface-container": "#1D1035",
+            "surface-container-high": "#271644",
+            "surface-container-highest": "#36205C",
+            "on-surface": "#F7F2FA",
+            "on-background": "#F7F2FA",
+            "on-surface-variant": "#D8CDE4",
+            "outline": "#7B629E",
+            "outline-variant": "#493366",
+            "primary": "#E0AAFF",
+            "primary-container": "#4A1278",
+            "on-primary": "#240046",
+            "on-primary-container": "#F5E6FF",
+            "secondary": "#C77DFF",
+            "secondary-container": "#2E1052",
+            "on-secondary": "#10002B",
+            "tertiary": "#FF77A8",
+            "tertiary-container": "#520025",
+            "on-tertiary": "#3D0019",
+            "on-tertiary-container": "#FFD9E4",
+            "accent-magenta": "#FF77A8",
+            "accent-lavender": "#E0AAFF",
+            "cosmic-violet": "#9D4EDD"
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "1.75rem",
+            "xl": "2.5rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-xl": "2.5rem",
+            "space-lg": "1.75rem",
+            "space-md": "1rem",
+            "margin-mobile": "1.25rem",
+            "space-xs": "0.25rem",
+            "gutter": "1.5rem",
+            "space-sm": "0.5rem"
+          },
+          fontFamily: {
+            "headline-lg": ["Playfair Display", "serif"],
+            "headline-md": ["Playfair Display", "serif"],
+            "headline-sm": ["Playfair Display", "serif"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "label-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "label-md": ["Plus Jakarta Sans", "sans-serif"],
+            "label-sm": ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #0F051D;
+        color: #F7F2FA;
+        background-image: 
+          radial-gradient(ellipse 95% 45% at 50% -5%, rgba(157, 78, 221, 0.28), transparent 70%),
+          radial-gradient(ellipse 80% 50% at 92% 55%, rgba(255, 119, 168, 0.16), transparent 60%),
+          radial-gradient(ellipse 70% 55% at 8% 80%, rgba(138, 43, 226, 0.22), transparent 70%);
+        background-attachment: fixed;
+      }
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+      .pt-safe { padding-top: env(safe-area-inset-top, 12px); }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.15; transform: scale(0.85); }
+      50% { opacity: 0.95; transform: scale(1.25); }
+    }
+
+    @keyframes sparkleGlow {
+      0%, 100% { opacity: 0.15; transform: scale(0.7) rotate(0deg); }
+      50% { opacity: 0.95; transform: scale(1.15) rotate(45deg); filter: drop-shadow(0 0 8px rgba(224, 170, 255, 0.85)); }
+    }
+
+    @keyframes nebulaBreathe {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.28; }
+      50% { transform: scale(1.12) translate(-3%, 2%); opacity: 0.45; }
+    }
+
+    @keyframes pulseAura {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 119, 168, 0.4); }
+      50% { transform: scale(1.03); box-shadow: 0 0 25px 6px rgba(224, 170, 255, 0.5); }
+    }
+
+    .animate-twinkle { animation: twinkle var(--twinkle-dur, 3.5s) ease-in-out infinite; }
+    .animate-sparkle { animation: sparkleGlow var(--sparkle-dur, 5s) ease-in-out infinite; }
+    .animate-nebula { animation: nebulaBreathe 14s ease-in-out infinite; }
+    .audio-pulsing { animation: pulseAura 2s ease-in-out infinite; }
+
+    .fade-transition {
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .fade-out {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    .fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate-twinkle, .animate-sparkle, .animate-nebula, .audio-pulsing, .fade-transition {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-full bg-surface text-on-surface font-body-md text-[15px] flex flex-col antialiased selection:bg-accent-magenta selection:text-white relative">
+<!-- Ambient Cosmic Dust & Nebulas -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<div class="absolute -top-24 left-1/4 w-[420px] h-[420px] rounded-full bg-gradient-to-br from-[#9D4EDD]/20 via-[#4A1278]/25 to-transparent blur-[90px] animate-nebula" style="animation-delay: 0s;"></div>
+<div class="absolute top-1/3 -right-24 w-[340px] h-[340px] rounded-full bg-gradient-to-bl from-accent-magenta/15 via-[#2E1052]/30 to-transparent blur-[80px] animate-nebula" style="animation-delay: -5s;"></div>
+<div class="absolute bottom-1/4 -left-20 w-[380px] h-[380px] rounded-full bg-gradient-to-tr from-[#9D4EDD]/20 via-[#1D1035]/35 to-transparent blur-[85px] animate-nebula" style="animation-delay: -9s;"></div>
+<!-- Starfield particles -->
+<div class="absolute top-[6%] left-[10%] w-[2px] h-[2px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 3.2s; animation-delay: 0.2s;"></div>
+<div class="absolute top-[12%] right-[16%] w-[1.5px] h-[1.5px] rounded-full bg-white animate-twinkle" style="--twinkle-dur: 4.1s; animation-delay: 1.5s;"></div>
+<div class="absolute top-[20%] left-[26%] w-[2px] h-[2px] rounded-full bg-[#FF77A8] animate-twinkle" style="--twinkle-dur: 2.8s; animation-delay: 0.8s;"></div>
+<div class="absolute top-[32%] right-[10%] w-[1.5px] h-[1.5px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 4.8s; animation-delay: 2.1s;"></div>
+<div class="absolute top-[48%] left-[7%] w-[2.5px] h-[2.5px] rounded-full bg-white/90 animate-twinkle" style="--twinkle-dur: 3.6s; animation-delay: 1.1s;"></div>
+<div class="absolute top-[65%] right-[14%] w-[2px] h-[2px] rounded-full bg-[#FF77A8] animate-twinkle" style="--twinkle-dur: 3.4s; animation-delay: 1.8s;"></div>
+<div class="absolute top-[82%] left-[18%] w-[2px] h-[2px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 4.4s; animation-delay: 0.5s;"></div>
+<!-- Diamond 4-Point Cosmic Sparkles -->
+<div class="absolute top-[16%] right-[8%] animate-sparkle" style="--sparkle-dur: 5.4s; animation-delay: 0.5s;">
+<svg class="w-3.5 h-3.5 text-[#E0AAFF]" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z"></path></svg>
+</div>
+<div class="absolute top-[52%] left-[5%] animate-sparkle" style="--sparkle-dur: 6.2s; animation-delay: 2.8s;">
+<svg class="w-3 h-3 text-[#FF77A8]" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z"></path></svg>
+</div>
+<div class="absolute top-[78%] right-[8%] animate-sparkle" style="--sparkle-dur: 5.8s; animation-delay: 1.6s;">
+<svg class="w-3.5 h-3.5 text-[#E0AAFF]" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z"></path></svg>
+</div>
+</div>
+<!-- Header Superior Místico -->
+<header class="fixed top-0 w-full z-50 pt-safe bg-[#0F051D]/85 backdrop-blur-xl border-b border-[#9D4EDD]/20 shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+<div class="h-16 px-margin-mobile flex items-center justify-between gap-space-sm">
+<a href="../index.html" class="flex items-center gap-space-sm cursor-pointer hover:opacity-85 transition-opacity">
+<div class="w-9 h-9 rounded-full bg-[#9D4EDD]/25 border border-[#E0AAFF]/35 flex items-center justify-center text-accent-lavender shadow-[0_0_14px_rgba(224,170,255,0.35)]">
+<span class="material-symbols-outlined text-[20px]">spa</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-lg font-medium tracking-tight text-on-surface leading-none">Aura</span>
+<span class="font-label-sm text-[10px] text-[#B592D9] uppercase tracking-widest leading-none mt-1">Santuario Interior</span>
+</div>
+</a>
+<div class="flex items-center gap-2">
+<a class="h-9 px-4 rounded-full bg-gradient-to-r from-accent-magenta via-secondary to-primary hover:brightness-110 text-on-primary font-label-md text-xs font-semibold flex items-center gap-1.5 transition-all shadow-[0_0_16px_rgba(255,119,168,0.4)] active:scale-95" href="../index.html">
+<span>← Portada</span>
+</a>
+<a href="../TranquilidadYCalma/code.html" title="Ir a Calma" class="w-9 h-9 rounded-full bg-surface-container border border-[#9D4EDD]/40 flex items-center justify-center text-accent-lavender active:scale-95 transition-transform hover:border-accent-lavender">
+<span class="material-symbols-outlined text-[19px]">air</span>
+</a>
+</div>
+</div>
+</header>
+<!-- Contenido Principal -->
+<main class="flex-1 flex flex-col relative w-full pt-20 pb-28 bg-transparent min-h-screen z-10">
+<div class="flex flex-col w-full px-margin-mobile pt-space-sm pb-space-xl gap-6 max-w-md mx-auto">
+<!-- 1. Anchor Badge con Frecuencia y Empatía -->
+<div class="flex items-center justify-between w-full">
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-high/80 border border-[#9D4EDD]/30 shadow-sm backdrop-blur-md">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span>
+</span>
+<span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-sm text-[11px] text-primary tracking-widest uppercase font-semibold">Claridad &amp; Dirección • 528 Hz</span>
+</div>
+<span class="font-label-sm text-[11px] text-on-surface-variant/80 tracking-wide">Frecuencia de Sabiduría</span>
+</div>
+<!-- 2. Hero de Empatía & Sabiduría Consciente -->
+<div class="flex flex-col gap-3 pt-1">
+<h1 class="font-headline-lg text-[32px] sm:text-[36px] text-on-surface tracking-tight leading-[1.2]">
+          El Manantial de la
+          <span class="italic font-normal bg-gradient-to-r from-tertiary via-secondary to-primary bg-clip-text text-transparent drop-shadow-sm block">
+            Dirección Serena
+          </span>
+</h1>
+<!-- Mensaje Empático -->
+<div class="p-4 rounded-xl bg-surface-container/70 border border-[#9D4EDD]/25 backdrop-blur-lg shadow-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 bg-tertiary/10 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary text-[20px] mt-0.5 shrink-0" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<div class="flex flex-col gap-1.5">
+<p class="font-label-sm text-[11px] uppercase tracking-wider text-tertiary font-semibold">Si sientes confusión o cansancio mental</p>
+<p class="font-body-sm text-[13px] text-on-surface leading-relaxed">
+                Es natural abrumarse ante tantas bifurcaciones y opiniones ajenas. Recuerda que no necesitas ver todo el horizonte hoy: <strong class="text-primary font-medium">la luz es una lámpara para el paso inmediato, no para controlar el futuro</strong>. Respira hondo.
+              </p>
+</div>
+</div>
+<div class="mt-3 pt-3 border-t border-outline-variant/30 flex items-center justify-between text-on-surface-variant/90 text-xs italic">
+<span class="">«En la quietud y la confianza descansa tu verdadera fuerza.»</span>
+<span class="material-symbols-outlined text-[15px] text-secondary">flare</span>
+</div>
+</div>
+</div>
+<!-- 3. Los 3 Pilares del Discernimiento Diario (Interactivo Jung & Grinberg) -->
+<section class="flex flex-col gap-3 rounded-2xl bg-surface-container-low/85 border border-[#9D4EDD]/25 p-4 shadow-lg backdrop-blur-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">psychology_alt</span>
+<span class="font-headline-sm text-lg text-on-surface">Pilares Jung &amp; Grinberg</span>
+</div>
+<span class="font-label-sm text-[11px] text-tertiary uppercase tracking-wider font-semibold">Sintergia &amp; Psique</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant">
+          Integración psíquica profunda y decodificación holográfica de la Lattice. Selecciona un principio rector para explorar su revelación:
+        </p>
+<div class="grid grid-cols-1 gap-2 pt-1" id="pilares-group">
+<!-- Pilar 1: Carl Jung -->
+<button class="pilar-btn group active flex items-start gap-3 p-3.5 rounded-xl bg-secondary-container/40 border border-secondary/50 text-left transition-all active:scale-[0.98]" data-pilar="jung" type="button">
+<div class="w-8 h-8 rounded-full bg-tertiary/25 flex items-center justify-center text-tertiary shrink-0 mt-0.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">neurology</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-sm text-on-surface font-semibold">1. Individuación &amp; La Sombra (Jung)</span>
+<span class="material-symbols-outlined text-[18px] text-tertiary pilar-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant mt-0.5">Disolver la máscara (persona) e integrar lo inconsciente para despertar el Sí-Mismo.</p>
+</div>
+</button>
+<!-- Pilar 2: Jacobo Grinberg -->
+<button class="pilar-btn group flex items-start gap-3 p-3.5 rounded-xl bg-surface-container/60 border border-transparent text-left transition-all active:scale-[0.98]" data-pilar="grinberg" type="button">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0 mt-0.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">grain</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-sm text-on-surface font-semibold">2. Teoría Sintérgica &amp; La Lattice (Grinberg)</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant pilar-check">radio_button_unchecked</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant mt-0.5">La matriz holográfica de información: elevar la coherencia para decodificar la verdad.</p>
+</div>
+</button>
+<!-- Pilar 3: Puente Sintérgico-Arquetipal -->
+<button class="pilar-btn group flex items-start gap-3 p-3.5 rounded-xl bg-surface-container/60 border border-transparent text-left transition-all active:scale-[0.98]" data-pilar="puente" type="button">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0 mt-0.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">all_inclusive</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-sm text-on-surface font-semibold">3. Arquetipo &amp; Coherencia Sintérgica</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant pilar-check">radio_button_unchecked</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant mt-0.5">Manifestar y crear sin distorsión egóica, en resonancia directa con la matriz viva.</p>
+</div>
+</button>
+</div>
+<!-- Tarjeta de Reflexión Activa Dinámica con Transición Suave -->
+<div class="mt-2 p-3.5 rounded-xl bg-gradient-to-br from-[#2E1052]/50 via-[#1D1035]/85 to-[#0F051D]/90 border border-[#E0AAFF]/25 text-on-surface flex flex-col gap-2 shadow-inner fade-transition" id="pilar-revelacion">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-tertiary font-label-sm text-[11px] font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px]">auto_awesome</span>
+<span class="" id="pilar-titulo-detalle">Carl Jung: Individuación y la Sombra</span>
+</div>
+<span class="text-[10px] text-secondary font-mono px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20" id="pilar-fuente-tag">Carl G. Jung</span>
+</div>
+<p class="font-headline-sm text-[14px] italic text-[#F7F2FA] leading-relaxed drop-shadow-sm font-normal" id="pilar-texto-detalle">
+          «Quien mira hacia afuera sueña; quien mira hacia adentro despierta. Tu confusión actual no es un error, sino material reprimido pidiendo ser integrado por la luz de la consciencia.»
+        </p>
+<div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-on-surface-variant/90">
+<span class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[13px]">lightbulb</span>
+<strong class="font-medium text-xs" id="pilar-consejo-detalle">Consejo interior: Acepta tu emoción sin juzgarla; allí duerme tu mayor potencia creadora.</strong>
+</span>
+</div>
+</div>
+</section>
+<!-- 4. El Espejo de Sabiduría & Oráculo Dinámico (Chips Interactivos con Audio) -->
+<section class="flex flex-col gap-3 p-4 rounded-2xl bg-surface-container-high/60 border border-[#9D4EDD]/30 shadow-lg backdrop-blur-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[22px]" style="font-variation-settings: 'FILL' 1;">wb_twilight</span>
+<span class="font-headline-sm text-lg text-on-surface">El Espejo de Sabiduría</span>
+</div>
+<span class="font-label-sm text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 uppercase tracking-widest">Confidencial</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant">
+          Selecciona un dilema del camino interior o escribe el tuyo. La sabiduría atemporal de Jung y Grinberg orientará tu campo:
+        </p>
+<!-- Chips de dilemas rápidos interactivos (Completamente visibles y con feedback auditivo) -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar" id="oracle-chips-container">
+<button class="quick-prompt active whitespace-nowrap px-3 py-1.5 rounded-full bg-gradient-to-r from-tertiary/20 to-secondary/20 text-primary border border-tertiary/50 hover:border-tertiary transition-all font-label-sm" data-category="sombra" data-guide="Jung: «Uno no se ilumina imaginando figuras de luz, sino haciendo consciente la oscuridad.»" data-text="Siento un bloqueo o contradicción interna: ¿qué sombra o miedo inconsciente no estoy reconociendo?" type="button">🌓 Integrar Sombra &amp; Miedos</button>
+<button class="quick-prompt whitespace-nowrap px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-primary hover:bg-surface-container-highest border border-outline-variant/40 transition-all font-label-sm" data-category="lattice" data-guide="Grinberg: «La Lattice es la matriz pre-espacial. Al cesar el ruido egóico, la respuesta emerge de forma instantánea.»" data-text="La situación parece caótica y fragmentada: ¿cómo elevo mi coherencia para decodificar la solución en la matriz?" type="button">🕸️ Decodificar la Lattice</button>
+<button class="quick-prompt whitespace-nowrap px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-primary hover:bg-surface-container-highest border border-outline-variant/40 transition-all font-label-sm" data-category="vocacion" data-guide="Jung: «El privilegio de una vida es convertirse en quien realmente eres, sin la máscara impuesta por el entorno.»" data-text="Deseo manifestar mi vocación auténtica sin la aprobación de la máscara social ni el juicio ajeno..." type="button">✨ Individuación &amp; Vocación</button>
+<button class="quick-prompt whitespace-nowrap px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-primary hover:bg-surface-container-highest border border-outline-variant/40 transition-all font-label-sm" data-category="sintergia" data-guide="Grinberg: «El cerebro de alta sintergia unifica el tiempo y percibe el orden invisible detrás de la apariencia de conflicto.»" data-text="¿Cómo aquietar la distorsión del campo perceptual para sincronizar cerebro y corazón en alta frecuencia?" type="button">🧠 Coherencia Sintérgica</button>
+</div>
+<!-- Banner Orientador que cambia dinámicamente con cada chip -->
+<div class="px-3 py-2 rounded-xl bg-surface-container-low/90 border border-[#9D4EDD]/25 flex items-center justify-between text-xs fade-transition" id="chip-orientador-banner">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px] text-tertiary">psychology</span>
+<span class="italic text-[11px]" id="chip-orientador-texto">Jung: «Uno no se ilumina imaginando figuras de luz, sino haciendo consciente la oscuridad.»</span>
+</div>
+<span class="material-symbols-outlined text-[14px] text-secondary shrink-0">flare</span>
+</div>
+<!-- Input Textarea -->
+<div class="relative w-full">
+<textarea class="w-full p-3.5 rounded-xl bg-surface-container-lowest/80 border border-[#9D4EDD]/30 text-on-surface placeholder:text-outline text-xs outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-all resize-none shadow-inner" id="oracle-input" placeholder="Escribe aquí tu duda, decisión o anhelo creativo..." rows="3">Siento un bloqueo o contradicción interna: ¿qué sombra o miedo inconsciente no estoy reconociendo?</textarea>
+</div>
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-gradient-to-r from-tertiary via-secondary to-primary hover:brightness-110 text-on-primary font-label-md text-xs font-semibold shadow-lg active:scale-[0.98] transition-all" id="btn-oracle" type="button">
+<span class="">Discernir con Lucidez ✦</span>
+<span class="material-symbols-outlined text-[16px]">all_inclusive</span>
+</button>
+<!-- Live Feedback Container Dinámico -->
+<div class="flex flex-col gap-2 p-3.5 rounded-xl bg-secondary-container/35 border border-tertiary/40 transition-all fade-transition" id="oracle-response">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-tertiary font-label-sm text-xs font-semibold">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<span id="oracle-source-badge">Carl Jung: Revelación Psíquica</span>
+</div>
+<span class="text-[10px] text-accent-lavender font-mono">Principio Atemporal</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface leading-relaxed italic" id="oracle-response-text">«Hasta que lo inconsciente no se haga consciente, el subconsciente dirigirá tu vida y tú lo llamarás destino. Al abrazar la sombra que evitas, recuperas la energía vital que necesita tu presente.»</p>
+<div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-on-surface-variant">
+<span class="text-secondary font-medium" id="oracle-action-advice">Acción lúcida: Pregúntate hoy qué verdad temes admitir ante ti mismo.</span>
+<button class="text-tertiary hover:text-white flex items-center gap-1 active:scale-95 transition-transform" id="btn-sound-chime" type="button">
+<span class="material-symbols-outlined text-[14px]">volume_up</span>
+<span class="">Sellar en paz</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 5. Prácticas & Frecuencias de Claridad (528 Hz Activo con Web Audio API) -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-xs text-tertiary tracking-widest uppercase font-semibold">Inmersiones Sonoras</span>
+<h2 class="font-headline-md text-xl text-on-surface">Prácticas &amp; Frecuencias de Sabiduría</h2>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container border border-[#9D4EDD]/30 font-label-sm text-[11px] text-on-surface-variant">528 Hz • Solfeggio</span>
+</div>
+<!-- Tarjeta 1: Con reproductor de síntesis de audio 528 Hz -->
+<div class="flex flex-col gap-3 p-4 rounded-2xl bg-surface-container/70 border border-[#9D4EDD]/25 shadow-md backdrop-blur-md relative overflow-hidden">
+<div class="relative w-full h-36 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A glowing mystical sacred geometric mandala of luminous magenta and lavender light intersecting within an indigo cosmic nebula space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMJgrnWHJPfVFyWFy2hdZZ2dsPSeMUN43OulVJB2AM4VVX-qFn27HkZAgYEp2yhPARzyCgK3H7xhmsBLThHVCwEy16b1-yyXeuVQUdFDXO40wSRo3G-xQEXkr9__iSZW8aliIAEILbbyfrX4FFufgrRhQg7BbEOoOzoFS7qaJDDs9nLoxyzByNYwk3gCdT3k742JDHQCEnByp0YO-B5lFDbxYNJxIfkz6v05n604E"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"></div>
+<div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-md font-label-sm text-[11px] text-tertiary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">graphic_eq</span>
+                528 Hz Tono Puro
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-md font-label-sm text-[11px] text-on-surface">
+                12 min
+              </span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-base text-on-surface font-medium">El Arquitecto de la Verdad</h3>
+<p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+              Disuelve las narrativas de miedo y la parálisis mental. Esta frecuencia armónica restaura el tono de convicción interna y sosiega el sistema nervioso.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">tune</span>
+<span class="" id="audio-freq-label">Generador armónico vivo</span>
+</div>
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-tertiary to-secondary text-on-primary font-label-md text-xs font-semibold shadow-md active:scale-95 transition-all" id="btn-toggle-528" type="button">
+<span class="" id="btn-528-text">Sintonizar 528 Hz</span>
+<span class="material-symbols-outlined text-[16px]" id="btn-528-icon" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+<!-- Tarjeta 2: Siembra Serena (Coherencia Cardíaca 4-4-4) -->
+<div class="flex flex-col gap-3 p-4 rounded-2xl bg-surface-container/70 border border-[#9D4EDD]/25 shadow-md backdrop-blur-md">
+<div class="relative w-full h-36 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A silhouette meditating amidst deep violet and electric amethyst energy vortexes with starry indigo heavens" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBamIWvoHRyEcveFgdSrVHrHdGxgGKMWvBmoyWm0kcZ2j1KWAjjfMB71IWe1xQHNnTMfhFMQ1CVtk5AMimt1lLgW49-c2SgQ_jOWHcdHrHePxwc1w1gohFkYlQ0wID1FY4o4sEjKWqljN2aRJsaCnNX9mWioF_zoYHCHNqL7TPgoytos-ArS8msUt4kNCofZSm2z7O-pQuiSFKzcPA_Shh7yAS6O1c-ne7LJcZpX0U"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"></div>
+<div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-md font-label-sm text-[11px] text-secondary font-semibold">
+                Coherencia Cardíaca 0.1 Hz
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-md font-label-sm text-[11px] text-on-surface">
+                7 min
+              </span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-base text-on-surface font-medium">Siembra Serena &amp; Enfoque Láser</h3>
+<p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+              Lo que siembras en el secreto florece a la vista de todos. Respiración triangular sincrónica para apaciguar el afán por el futuro.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">favorite</span>
+<span class="">Ritmo 4-4-4 Guiado</span>
+</div>
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-primary font-label-md text-xs font-semibold shadow-sm active:scale-95 transition-all" id="btn-breathing-demo" type="button">
+<span class="">Practicar</span>
+<span class="material-symbols-outlined text-[16px]">air</span>
+</button>
+</div>
+</div>
+<!-- Tarjeta 3: El Silencio que Ilumina (Micro-pausa) -->
+<div class="flex flex-col gap-3 p-4 rounded-2xl bg-surface-container/70 border border-[#9D4EDD]/25 shadow-md backdrop-blur-md">
+<div class="relative w-full h-36 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Sacred luminous triangle drifting over a still reflective night pool with violet celestial rays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAgkW2EoReTAJKwkagwJ_R-EPG0NWquQ3yviANHW8BRGTil7_UluQu2P80CZ-3n-RaTv5NLCVseb5QSBww13F8caOrbk-EyQI9NgS4hu2Xg-_B_bX4ZaRCqTcyQQLS1gK1XSGesUq5vgsAgRQEZ2pHu0EXuXGoNV44KnsE7QXQBOEdu1el2WlIVDje15FJp5ZeqZzj8m9uZd7S_95MY8jsCffTx1F5K82nzaM72vE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/30 to-transparent"></div>
+<div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-md font-label-sm text-[11px] text-primary font-semibold">
+                Espacio Sagrado
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-md font-label-sm text-[11px] text-on-surface">
+                3 min
+              </span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-base text-on-surface font-medium">El Silencio que Ilumina</h3>
+<p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+              Cierra los ojos. No necesitas forzar las respuestas cuando la mente descansa; en la calma más profunda se decanta la verdad con nitidez de cristal.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">self_improvement</span>
+<span class="">Silencio Receptivo</span>
+</div>
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-primary font-label-md text-xs font-semibold shadow-sm active:scale-95 transition-all" id="btn-silence-pause" type="button">
+<span class="">Pausar 3 min</span>
+<span class="material-symbols-outlined text-[16px]">hourglass_empty</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 6. El Manifiesto del Creador Consciente (Interactivo Jung & Grinberg con Revelador Cíclico) -->
+<section class="flex flex-col gap-3 rounded-2xl bg-surface-container-low/70 border border-[#9D4EDD]/25 p-4 shadow-lg backdrop-blur-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">menu_book</span>
+<h2 class="font-headline-sm text-lg text-on-surface">El Manifiesto de Sabiduría Viva</h2>
+</div>
+<span class="font-label-sm text-[10px] text-accent-lavender px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">Interactivo</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant">
+      Haz clic en cualquiera de las tarjetas de axiomas para activar su lectura consciente o pulsa para revelar nuevas citas:
+    </p>
+<!-- Tarjeta Destacada Activa del Manifiesto -->
+<div class="p-4 rounded-xl bg-gradient-to-br from-[#2E1052]/60 via-[#1D1035]/90 to-[#0F051D] border border-tertiary/40 flex flex-col gap-2.5 shadow-md relative overflow-hidden fade-transition" id="manifiesto-destacado-card">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary shadow-[0_0_8px_rgba(255,119,168,0.8)] animate-pulse"></span>
+<span class="font-label-md text-xs font-semibold text-tertiary tracking-wide uppercase" id="manifiesto-destacado-autor">Carl Jung • Individuación</span>
+</div>
+<span class="text-[10px] text-accent-lavender/80 font-mono" id="manifiesto-destacado-tag">Axioma Vivo</span>
+</div>
+<blockquote class="font-headline-sm text-[15px] italic text-on-surface leading-relaxed drop-shadow-sm font-normal" id="manifiesto-destacado-cita">
+        «Hasta que no hagas consciente lo inconsciente, aquello guiará tu vida y lo llamarás destino. Tu discernimiento no proviene de evitar la sombra, sino de iluminarla con valentía serena.»
+      </blockquote>
+<div class="pt-2 border-t border-outline-variant/30 flex items-center justify-between text-xs text-on-surface-variant">
+<span class="text-[11px] text-primary" id="manifiesto-destacado-aplicacion">Aplicación práctica: Observa hoy lo que te irrita en otros; es tu sombra esperando integración.</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">auto_stories</span>
+</div>
+</div>
+<!-- Botón Revelar Siguiente Sabiduría Viva -->
+<div class="flex items-center gap-2">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full bg-surface-container-high hover:bg-surface-bright border border-secondary/40 text-primary font-label-md text-xs font-semibold shadow-md active:scale-95 transition-all group" id="btn-revelar-sabiduria" type="button">
+<span class="material-symbols-outlined text-[16px] text-tertiary group-hover:rotate-180 transition-transform">autorenew</span>
+<span>✦ Revelar otra frase de sabiduría (Jung &amp; Grinberg)</span>
+</button>
+</div>
+<!-- Tarjetas Seleccionables del Manifiesto -->
+<div class="grid grid-cols-1 gap-2.5 pt-1" id="manifiesto-cards-list">
+<!-- Axioma 1: Carl Jung -->
+<div class="manifiesto-card active p-3 rounded-xl bg-surface-container/80 border border-tertiary/50 hover:border-tertiary flex items-start gap-3 cursor-pointer transition-all active:scale-[0.99]" data-autor="Carl Jung • Sombra &amp; Consciencia" data-cita="«Hasta que no hagas consciente lo inconsciente, aquello guiará tu vida y lo llamarás destino. Tu discernimiento no proviene de evitar la sombra, sino de iluminarla con valentía serena.»" data-practica="Aplicación práctica: Observa hoy lo que te irrita en otros; es tu sombra pidiendo ser amada e integrada.">
+<div class="w-7 h-7 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-xs font-semibold text-primary">La Mirada Interior (Carl Jung)</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary manifiesto-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant mt-0.5 leading-relaxed line-clamp-2">
+            Hasta que no hagas consciente lo inconsciente, aquello guiará tu vida y lo llamarás destino.
+          </p>
+</div>
+</div>
+<!-- Axioma 2: Jacobo Grinberg -->
+<div class="manifiesto-card p-3 rounded-xl bg-surface-container/50 border border-outline-variant/30 hover:border-secondary/50 flex items-start gap-3 cursor-pointer transition-all active:scale-[0.99]" data-autor="Jacobo Grinberg • Teoría Sintérgica" data-cita="«La realidad es una matriz holográfica de información pura. En estados de alta coherencia sintérgica, el observador y lo observado son uno: la dirección que buscas ya está inscrita en el tejido del cosmos.»" data-practica="Aplicación práctica: Respira profundo y aquieta el diálogo mental para alinearte con el campo unificado.">
+<div class="w-7 h-7 rounded-full bg-secondary/20 flex items-center justify-center text-secondary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">hub</span>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-xs font-semibold text-secondary">Unificación con la Lattice (Jacobo Grinberg)</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant manifiesto-check">radio_button_unchecked</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant mt-0.5 leading-relaxed line-clamp-2">
+            La realidad es una matriz holográfica: al elevar la coherencia, el observador y lo observado se fusionan.
+          </p>
+</div>
+</div>
+<!-- Axioma 3: Meditación Autoalusiva Grinberg -->
+<div class="manifiesto-card p-3 rounded-xl bg-surface-container/50 border border-outline-variant/30 hover:border-primary/50 flex items-start gap-3 cursor-pointer transition-all active:scale-[0.99]" data-autor="Jacobo Grinberg • Meditación Autoalusiva" data-cita="«El observador que atestigua todos sus contenidos mentales sin identificarse con ninguno disuelve el sufrimiento. Es la consciencia pura reconociéndose a sí misma en el espejo del cosmos.»" data-practica="Aplicación práctica: Observa tus pensamientos como nubes que cruzan el cielo sin aferrarte a ninguno.">
+<div class="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">all_inclusive</span>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-xs font-semibold text-accent-lavender">El Observador &amp; Lo Autoalusivo (Grinberg)</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant manifiesto-check">radio_button_unchecked</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant mt-0.5 leading-relaxed line-clamp-2">
+            Atestiguar los pensamientos sin juzgarlos devuelve la consciencia al estado primordial del testigo.
+          </p>
+</div>
+</div>
+<!-- Axioma 4: Carl Jung Sincronicidad -->
+<div class="manifiesto-card p-3 rounded-xl bg-surface-container/50 border border-outline-variant/30 hover:border-tertiary/50 flex items-start gap-3 cursor-pointer transition-all active:scale-[0.99]" data-autor="Carl Jung • Sincronicidad &amp; Sentido" data-cita="«La sincronicidad es la coincidencia temporal de dos o más sucesos relacionados no causalmente, que tienen el mismo o semejante significado. El universo responde a la intención genuina del alma.»" data-practica="Aplicación práctica: Atiende hoy las aparentes casualidades; son susurros de la dirección correcta.">
+<div class="w-7 h-7 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">psychology</span>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-xs font-semibold text-primary">Sincronicidad &amp; Sentido (Carl Jung)</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant manifiesto-check">radio_button_unchecked</span>
+</div>
+<p class="font-body-sm text-xs text-on-surface-variant mt-0.5 leading-relaxed line-clamp-2">
+            Las coincidencias significativas reflejan el lazo invisible entre la psique individual y el mundo exterior.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. Siguiente Portal (Navegación Fluida) -->
+<section class="flex flex-col gap-3 pt-2">
+<a class="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-surface-container via-surface-container-high to-surface-container border border-[#9D4EDD]/30 shadow-md active:scale-[0.99] transition-transform group" href="../ExpancionDeConciencia/code.html">
+<div class="flex flex-col">
+<span class="font-label-sm text-[11px] text-tertiary uppercase tracking-wider font-semibold">Siguiente Portal Sagrado</span>
+<span class="font-headline-sm text-base text-on-surface group-hover:text-primary transition-colors">Expansión &amp; Consciencia Plena (963 Hz)</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary shadow-sm group-hover:bg-tertiary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</a>
+<div class="flex items-center justify-center pt-1 gap-4">
+<a class="flex items-center gap-1.5 font-label-md text-xs text-secondary hover:text-white transition-colors" href="../TranquilidadYCalma/code.html">
+<span class="material-symbols-outlined text-[16px]">air</span>
+<span>Portal 1: Calma (432 Hz)</span>
+</a>
+<span class="text-on-surface-variant/40">•</span>
+<a class="flex items-center gap-1.5 font-label-md text-xs text-primary hover:text-tertiary transition-colors" href="../index.html">
+<span class="material-symbols-outlined text-[16px]">temple_buddhist</span>
+<span>Portada principal</span>
+</a>
+</div>
+</section>
+</div>
+</main>
+<!-- Modal / Banner Informativo de Inicio de Viaje -->
+<div class="fixed inset-0 z-50 bg-[#0F051D]/80 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" id="modal-viaje">
+<div class="w-full max-w-sm p-6 rounded-2xl bg-surface-container border border-[#9D4EDD]/40 shadow-2xl flex flex-col gap-4 text-center">
+<div class="w-12 h-12 rounded-full bg-tertiary/20 text-tertiary mx-auto flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">explore</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-md text-xl text-on-surface">Bienvenido al Viaje</h3>
+<p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+          Has entrado en un espacio libre de juicios y prisas. Todo el santuario está disponible para ti de forma abierta. Comienza con una respiración profunda.
+        </p>
+</div>
+<button class="py-2.5 px-4 rounded-full bg-gradient-to-r from-tertiary to-secondary text-on-primary font-label-md text-xs font-semibold shadow-md active:scale-95 transition-all" id="btn-cerrar-modal">
+        Comenzar en Silencio
+      </button>
+</div>
+</div>
+<!-- Barra de Navegación Inferior -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#0F051D]/90 backdrop-blur-xl border-t border-[#9D4EDD]/25 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]">
+<div class="flex justify-around items-center h-16 px-gutter">
+<a class="flex flex-col items-center justify-center min-w-[56px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors" href="../index.html">
+<span class="material-symbols-outlined text-[22px]">spa</span>
+<span class="font-label-sm text-[10px]">Santuario</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors" href="../TranquilidadYCalma/code.html">
+<span class="material-symbols-outlined text-[22px]">air</span>
+<span class="font-label-sm text-[10px]">Calma</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] h-12 gap-0.5 text-accent-magenta font-semibold transition-colors" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-sm text-[10px]">Claridad</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[56px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors" href="../ExpancionDeConciencia/code.html">
+<span class="material-symbols-outlined text-[22px]">all_inclusive</span>
+<span class="font-label-sm text-[10px]">Expansión</span>
+</a>
+</div>
+</nav>
+<!-- Lógica Interactiva, Transiciones y Audio Sintético -->
+<script>
+    // --- 1. Audio Synthesis Engine (528 Hz Solfeggio & Chimes sutiles) ---
+    let audioCtx = null;
+    let osc528 = null;
+    let gain528 = null;
+    let isPlaying528 = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSacredChime(freq = 528, duration = 1.2) {
+      try {
+        initAudio();
+        const chimeOsc = audioCtx.createOscillator();
+        const chimeGain = audioCtx.createGain();
+        chimeOsc.type = 'sine';
+        chimeOsc.frequency.setValueAtTime(freq * 1.5, audioCtx.currentTime);
+        chimeOsc.frequency.exponentialRampToValueAtTime(freq, audioCtx.currentTime + 0.25);
+
+        chimeGain.gain.setValueAtTime(0.09, audioCtx.currentTime);
+        chimeGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+        chimeOsc.connect(chimeGain);
+        chimeGain.connect(audioCtx.destination);
+
+        chimeOsc.start();
+        chimeOsc.stop(audioCtx.currentTime + duration + 0.1);
+      } catch (e) {
+        // Audio fallback en navegadores estrictos con autoplay
+      }
+    }
+
+    function toggle528Hz() {
+      initAudio();
+      const btn = document.getElementById('btn-toggle-528');
+      const btnText = document.getElementById('btn-528-text');
+      const btnIcon = document.getElementById('btn-528-icon');
+      const label = document.getElementById('audio-freq-label');
+
+      if (!isPlaying528) {
+        osc528 = audioCtx.createOscillator();
+        const subOsc = audioCtx.createOscillator();
+        gain528 = audioCtx.createGain();
+        const subGain = audioCtx.createGain();
+
+        osc528.type = 'sine';
+        osc528.frequency.setValueAtTime(528, audioCtx.currentTime);
+
+        subOsc.type = 'sine';
+        subOsc.frequency.setValueAtTime(264, audioCtx.currentTime);
+
+        gain528.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        gain528.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 1.2);
+
+        subGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        subGain.gain.exponentialRampToValueAtTime(0.04, audioCtx.currentTime + 1.2);
+
+        osc528.connect(gain528);
+        subOsc.connect(subGain);
+
+        gain528.connect(audioCtx.destination);
+        subGain.connect(audioCtx.destination);
+
+        osc528.start();
+        subOsc.start();
+        osc528._sub = subOsc;
+
+        isPlaying528 = true;
+        btn.classList.add('audio-pulsing');
+        btnText.textContent = 'Pausar Frecuencia';
+        btnIcon.textContent = 'pause';
+        label.textContent = 'Oscilando a 528 Hz (Vibrando)';
+      } else {
+        if (gain528) {
+          gain528.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
+          setTimeout(() => {
+            if (osc528) {
+              osc528.stop();
+              if (osc528._sub) osc528._sub.stop();
+              osc528.disconnect();
+              osc528 = null;
+            }
+          }, 650);
+        }
+        isPlaying528 = false;
+        btn.classList.remove('audio-pulsing');
+        btnText.textContent = 'Sintonizar 528 Hz';
+        btnIcon.textContent = 'play_arrow';
+        label.textContent = 'Generador armónico en reposo';
+      }
+    }
+
+    document.getElementById('btn-toggle-528')?.addEventListener('click', toggle528Hz);
+    document.getElementById('btn-sound-chime')?.addEventListener('click', () => playSacredChime(639, 1.8));
+
+    // --- 2. Los 3 Pilares del Discernimiento (Jung & Grinberg Dinámico) ---
+    const pilarData = {
+      jung: {
+        titulo: "Carl Jung: Individuación y la Sombra",
+        fuente: "Carl G. Jung",
+        texto: "«Quien mira hacia afuera sueña; quien mira hacia adentro despierta. Tu confusión actual no es un error, sino material reprimido pidiendo ser integrado por la luz de la consciencia.»",
+        consejo: "Consejo interior: Acepta tu emoción sin juzgarla; allí duerme tu mayor potencia creadora."
+      },
+      grinberg: {
+        titulo: "Jacobo Grinberg: Teoría Sintérgica y la Lattice",
+        fuente: "Dr. Jacobo Grinberg",
+        texto: "«El cerebro no produce la realidad; modula la Lattice cósmica. Cuando sincronizas ambos hemisferios y disuelves el apego al resultado, la solución geométrica y perfecta se devela ante ti.»",
+        consejo: "Consejo interior: Eleva la coherencia mental en el silencio; la respuesta ya existe en la matriz."
+      },
+      puente: {
+        titulo: "El Puente: Arquetipo & Coherencia Sintérgica",
+        fuente: "Síntesis Psico-Sintérgica",
+        texto: "«Cuando el Arquetipo universal desciende sobre una psique libre de egoísmo, el acto creador fluye sin esfuerzo. Eres a la vez la antena receptora y el arquitecto consciente de tu destino.»",
+        consejo: "Consejo interior: No fuerces el paso; actúa desde la calma absoluta y el universo conspirará a tu favor."
+      }
+    };
+
+    const pilarBtns = document.querySelectorAll('.pilar-btn');
+    const pilarCard = document.getElementById('pilar-revelacion');
+    const pilarTitulo = document.getElementById('pilar-titulo-detalle');
+    const pilarFuente = document.getElementById('pilar-fuente-tag');
+    const pilarTexto = document.getElementById('pilar-texto-detalle');
+    const pilarConsejo = document.getElementById('pilar-consejo-detalle');
+
+    pilarBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        playSacredChime(432, 0.8);
+        pilarBtns.forEach(b => {
+          b.classList.remove('active', 'bg-secondary-container/40', 'border-secondary/50');
+          b.classList.add('bg-surface-container/60', 'border-transparent');
+          const checkIcon = b.querySelector('.pilar-check');
+          if (checkIcon) {
+            checkIcon.textContent = 'radio_button_unchecked';
+            checkIcon.classList.remove('text-tertiary');
+            checkIcon.classList.add('text-on-surface-variant');
+            checkIcon.style.fontVariationSettings = "'FILL' 0";
+          }
+          const iconBox = b.querySelector('.w-8');
+          if (iconBox) {
+            iconBox.classList.remove('bg-tertiary/25', 'text-tertiary');
+            iconBox.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+          }
+        });
+
+        btn.classList.add('active', 'bg-secondary-container/40', 'border-secondary/50');
+        btn.classList.remove('bg-surface-container/60', 'border-transparent');
+        const checkIcon = btn.querySelector('.pilar-check');
+        if (checkIcon) {
+          checkIcon.textContent = 'check_circle';
+          checkIcon.classList.add('text-tertiary');
+          checkIcon.classList.remove('text-on-surface-variant');
+          checkIcon.style.fontVariationSettings = "'FILL' 1";
+        }
+        const iconBox = btn.querySelector('.w-8');
+        if (iconBox) {
+          iconBox.classList.add('bg-tertiary/25', 'text-tertiary');
+          iconBox.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+        }
+
+        const key = btn.getAttribute('data-pilar');
+        if (pilarData[key] && pilarCard) {
+          pilarCard.classList.add('fade-out');
+          setTimeout(() => {
+            pilarTitulo.textContent = pilarData[key].titulo;
+            pilarFuente.textContent = pilarData[key].fuente;
+            pilarTexto.textContent = pilarData[key].texto;
+            pilarConsejo.textContent = pilarData[key].consejo;
+            pilarCard.classList.remove('fade-out');
+          }, 200);
+        }
+      });
+    });
+
+    // --- 3. El Espejo de Sabiduría & Chips Interactivos ---
+    const oracleBtn = document.getElementById('btn-oracle');
+    const oracleInput = document.getElementById('oracle-input');
+    const oracleResponse = document.getElementById('oracle-response');
+    const oracleResponseText = document.getElementById('oracle-response-text');
+    const oracleSourceBadge = document.getElementById('oracle-source-badge');
+    const oracleActionAdvice = document.getElementById('oracle-action-advice');
+    const quickPrompts = document.querySelectorAll('.quick-prompt');
+    const chipBannerText = document.getElementById('chip-orientador-texto');
+    const chipBanner = document.getElementById('chip-orientador-banner');
+
+    const oracleAnswers = {
+      sombra: {
+        badge: "Carl Jung: Integración de la Sombra",
+        quote: "«Aquello a lo que te resistes, persiste. Lo que aceptas, te transforma. Deja de luchar contra la incertidumbre o el temor y pregúntate qué poder auténtico reside oculto tras esa resistencia.»",
+        advice: "Acción lúcida: Escribe tu mayor temor actual y reconócelo sin reproches."
+      },
+      lattice: {
+        badge: "Jacobo Grinberg: Decodificación Sintérgica",
+        quote: "«La estructura pre-espacial de la Lattice contiene todas las posibilidades simultáneamente. Cuando aquietas la fluctuación mental egóica, la respuesta correcta colapsa de forma natural y sin esfuerzo.»",
+        advice: "Acción lúcida: Cierra los ojos durante dos minutos e imagina que tu mente es tan basta como el cielo."
+      },
+      vocacion: {
+        badge: "Carl Jung: El Llamado del Sí-Mismo",
+        quote: "«Tu visión se aclarará sólo cuando puedas mirar en tu propio corazón. Quien mira hacia afuera sueña; quien mira hacia adentro despierta. Tu vocación no necesita la validación del rebaño.»",
+        advice: "Acción lúcida: Da un paso discreto pero firme hacia tu anhelo hoy mismo."
+      },
+      sintergia: {
+        badge: "Jacobo Grinberg: Coherencia Neuroalgorítmica",
+        quote: "«La alta coherencia cerebral unifica el espacio perceptual con la matriz cósmica. La paz no es ausencia de dilemas, sino la sincronización total del corazón y el entendimiento.»",
+        advice: "Acción lúcida: Practica tres respiraciones lentas y profundas antes de emitir tu veredicto."
+      }
+    };
+
+    quickPrompts.forEach(chip => {
+      chip.addEventListener('click', () => {
+        playSacredChime(600, 0.7);
+        // Deseleccionar otros chips
+        quickPrompts.forEach(c => {
+          c.classList.remove('active', 'bg-gradient-to-r', 'from-tertiary/20', 'to-secondary/20', 'text-primary', 'border-tertiary/50');
+          c.classList.add('bg-surface-container', 'text-on-surface-variant', 'border-outline-variant/40');
+        });
+        chip.classList.add('active', 'bg-gradient-to-r', 'from-tertiary/20', 'to-secondary/20', 'text-primary', 'border-tertiary/50');
+        chip.classList.remove('bg-surface-container', 'text-on-surface-variant', 'border-outline-variant/40');
+
+        // Actualizar prompt y banner orientador
+        const promptText = chip.getAttribute('data-text');
+        const guideText = chip.getAttribute('data-guide');
+        const cat = chip.getAttribute('data-category');
+
+        oracleInput.value = promptText;
+
+        if (chipBanner && chipBannerText) {
+          chipBanner.classList.add('fade-out');
+          setTimeout(() => {
+            chipBannerText.textContent = guideText;
+            chipBanner.classList.remove('fade-out');
+          }, 150);
+        }
+
+        // Actualizar respuesta inmediatamente si corresponde a la categoría
+        if (oracleAnswers[cat] && oracleResponse) {
+          oracleResponse.classList.add('fade-out');
+          setTimeout(() => {
+            oracleSourceBadge.textContent = oracleAnswers[cat].badge;
+            oracleResponseText.textContent = oracleAnswers[cat].quote;
+            oracleActionAdvice.textContent = oracleAnswers[cat].advice;
+            oracleResponse.classList.remove('fade-out', 'hidden');
+          }, 200);
+        }
+      });
+    });
+
+    if (oracleBtn && oracleInput && oracleResponse) {
+      oracleBtn.addEventListener('click', () => {
+        const val = oracleInput.value.trim();
+        if (!val) {
+          oracleInput.placeholder = "Por favor escribe unas palabras para recibir claridad...";
+          oracleInput.focus();
+          return;
+        }
+
+        playSacredChime(528, 0.8);
+        oracleBtn.innerHTML = `<span>Decantando en la Lattice...</span><span class="material-symbols-outlined text-[16px] animate-spin">refresh</span>`;
+
+        setTimeout(() => {
+          const keys = Object.keys(oracleAnswers);
+          const randomKey = keys[Math.floor(Math.random() * keys.length)];
+          const chosen = oracleAnswers[randomKey];
+
+          oracleResponse.classList.add('fade-out');
+          setTimeout(() => {
+            oracleSourceBadge.textContent = chosen.badge;
+            oracleResponseText.textContent = chosen.quote;
+            oracleActionAdvice.textContent = chosen.advice;
+            oracleResponse.classList.remove('fade-out', 'hidden');
+          }, 200);
+
+          oracleBtn.innerHTML = `<span>Discernir con Lucidez ✦</span><span class="material-symbols-outlined text-[16px]">all_inclusive</span>`;
+          playSacredChime(528, 1.6);
+        }, 500);
+      });
+    }
+
+    // --- 4. Manifiesto Interactivo & Repertorio Cíclico de Sabiduría (Jung & Grinberg) ---
+    const repertorioSabiduria = [
+      {
+        autor: "Carl Jung • La Sombra y la Plenitud",
+        cita: "«No podemos cambiar nada a menos que lo aceptemos. La condena no libera, oprime. Al acoger tu sombra con benevolencia, nace tu luz más auténtica.»",
+        practica: "Aplicación práctica: Abraza hoy tus imperfecciones con compasión; son el abono de tu crecimiento."
+      },
+      {
+        autor: "Jacobo Grinberg • La Lattice y la Unidad",
+        cita: "«El espacio no está vacío; es una red infinita de información viva. Todo pensamiento resuena en la Lattice. Cuida la pureza de tu intención íntima.»",
+        practica: "Aplicación práctica: Emite un pensamiento sincero de paz hacia quien sientas distancia o conflicto."
+      },
+      {
+        autor: "Carl Jung • Sincronicidad y Destino",
+        cita: "«No soy lo que me sucedió, soy lo que elijo ser. Las sincronicidades son guiños del universo recordándote que caminas acompañado.»",
+        practica: "Aplicación práctica: Pon atención a los encuentros 'casuales' de hoy; esconden una lección valiosa."
+      },
+      {
+        autor: "Jacobo Grinberg • Meditación Autoalusiva",
+        cita: "«Cuando el observador observa al observador que observa, el ciclo se cierra en una explosión de presencia. Eres la consciencia atestiguando el milagro de existir.»",
+        practica: "Aplicación práctica: Haz una pausa de un minuto y sé consciente de que estás consciente."
+      },
+      {
+        autor: "Carl Jung • El Arquetipo del Héroe Interior",
+        cita: "«El zapato que le calza a una persona le aprieta a otra; no hay una receta de vida que sirva para todos los casos. Construye tu propio sendero sagrado.»",
+        practica: "Aplicación práctica: No midas tu progreso con la regla de otras personas."
+      },
+      {
+        autor: "Jacobo Grinberg • Chamanismo y Realidad",
+        cita: "«Los chamanes auténticos perciben la realidad directamente en la matriz sin el filtro de las palabras. El silencio absoluto es el portal a la lucidez máxima.»",
+        practica: "Aplicación práctica: Reduce hoy el parloteo innecesario y escucha con devota atención al mundo."
+      }
+    ];
+
+    let indiceSabiduria = 0;
+    const btnRevelar = document.getElementById('btn-revelar-sabiduria');
+    const manifiestoCard = document.getElementById('manifiesto-destacado-card');
+    const manifiestoAutor = document.getElementById('manifiesto-destacado-autor');
+    const manifiestoCita = document.getElementById('manifiesto-destacado-cita');
+    const manifiestoAplicacion = document.getElementById('manifiesto-destacado-aplicacion');
+    const manifiestoCards = document.querySelectorAll('.manifiesto-card');
+
+    function actualizarManifiestoDestacado(autor, cita, practica) {
+      if (!manifiestoCard) return;
+      manifiestoCard.classList.add('fade-out');
+      setTimeout(() => {
+        manifiestoAutor.textContent = autor;
+        manifiestoCita.textContent = cita;
+        manifiestoAplicacion.textContent = practica;
+        manifiestoCard.classList.remove('fade-out');
+      }, 200);
+    }
+
+    // Al hacer clic en cada tarjeta de axioma del Manifiesto
+    manifiestoCards.forEach(card => {
+      card.addEventListener('click', () => {
+        playSacredChime(528, 0.9);
+        manifiestoCards.forEach(c => {
+          c.classList.remove('active', 'border-tertiary/50', 'bg-surface-container/80');
+          c.classList.add('border-outline-variant/30', 'bg-surface-container/50');
+          const check = c.querySelector('.manifiesto-check');
+          if (check) {
+            check.textContent = 'radio_button_unchecked';
+            check.classList.remove('text-tertiary');
+            check.classList.add('text-on-surface-variant');
+            check.style.fontVariationSettings = "'FILL' 0";
+          }
+        });
+
+        card.classList.add('active', 'border-tertiary/50', 'bg-surface-container/80');
+        card.classList.remove('border-outline-variant/30', 'bg-surface-container/50');
+        const check = card.querySelector('.manifiesto-check');
+        if (check) {
+          check.textContent = 'check_circle';
+          check.classList.add('text-tertiary');
+          check.classList.remove('text-on-surface-variant');
+          check.style.fontVariationSettings = "'FILL' 1";
+        }
+
+        const autor = card.getAttribute('data-autor');
+        const cita = card.getAttribute('data-cita');
+        const practica = card.getAttribute('data-practica');
+        actualizarManifiestoDestacado(autor, cita, practica);
+      });
+    });
+
+    // Botón Revelar Siguiente Sabiduría Viva
+    if (btnRevelar) {
+      btnRevelar.addEventListener('click', () => {
+        playSacredChime(660, 1.1);
+        indiceSabiduria = (indiceSabiduria + 1) % repertorioSabiduria.length;
+        const item = repertorioSabiduria[indiceSabiduria];
+        actualizarManifiestoDestacado(item.autor, item.cita, item.practica);
+      });
+    }
+
+    // --- 5. Micro-acciones de Respiración y Silencio ---
+    const btnBreathing = document.getElementById('btn-breathing-demo');
+    if (btnBreathing) {
+      let isBreathing = false;
+      btnBreathing.addEventListener('click', () => {
+        if (!isBreathing) {
+          playSacredChime(432, 1.2);
+          isBreathing = true;
+          btnBreathing.innerHTML = `<span>Inhala 4s...</span><span class="material-symbols-outlined text-[16px] animate-pulse">air</span>`;
+          setTimeout(() => {
+            if (isBreathing) {
+              playSacredChime(528, 1);
+              btnBreathing.innerHTML = `<span>Sostén 4s...</span><span class="material-symbols-outlined text-[16px]">hourglass_bottom</span>`;
+            }
+          }, 4000);
+          setTimeout(() => {
+            if (isBreathing) {
+              playSacredChime(396, 1.2);
+              btnBreathing.innerHTML = `<span>Exhala 4s...</span><span class="material-symbols-outlined text-[16px]">waves</span>`;
+            }
+          }, 8000);
+          setTimeout(() => {
+            isBreathing = false;
+            playSacredChime(639, 1.5);
+            btnBreathing.innerHTML = `<span>Completado ✦</span><span class="material-symbols-outlined text-[16px]">check</span>`;
+            setTimeout(() => {
+              btnBreathing.innerHTML = `<span>Practicar</span><span class="material-symbols-outlined text-[16px]">air</span>`;
+            }, 3000);
+          }, 12000);
+        }
+      });
+    }
+
+    const btnSilence = document.getElementById('btn-silence-pause');
+    if (btnSilence) {
+      btnSilence.addEventListener('click', () => {
+        playSacredChime(528, 2.0);
+        btnSilence.innerHTML = `<span>Espacio Abierto ✦</span><span class="material-symbols-outlined text-[16px]">spa</span>`;
+        setTimeout(() => {
+          btnSilence.innerHTML = `<span>Pausar 3 min</span><span class="material-symbols-outlined text-[16px]">hourglass_empty</span>`;
+        }, 4000);
+      });
+    }
+
+    // --- 6. Modal de Viaje ---
+    const btnHeaderViaje = document.getElementById('btn-header-viaje');
+    const modalViaje = document.getElementById('modal-viaje');
+    const btnCerrarModal = document.getElementById('btn-cerrar-modal');
+
+    if (btnHeaderViaje && modalViaje && btnCerrarModal) {
+      btnHeaderViaje.addEventListener('click', () => {
+        modalViaje.classList.remove('opacity-0', 'pointer-events-none');
+        modalViaje.classList.add('opacity-100', 'pointer-events-auto');
+        playSacredChime(528, 1.5);
+      });
+      btnCerrarModal.addEventListener('click', () => {
+        modalViaje.classList.add('opacity-0', 'pointer-events-none');
+        modalViaje.classList.remove('opacity-100', 'pointer-events-auto');
+      });
+    }
+  </script>
+</body></html>
