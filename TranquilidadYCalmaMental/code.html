@@ -584,22 +584,22 @@
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#0F051D]/90 backdrop-blur-xl border-t border-[#9D4EDD]/25 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-accent-magenta font-semibold">
 <div class="flex justify-around items-center h-16 px-gutter-mobile">
-<button class="nav-tab flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-accent-magenta font-semibold transition-colors" data-path="santuario" type="button">
+<a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="santuario" href="../index.html">
 <span class="material-symbols-outlined text-[22px]">spa</span>
 <span class="font-label-sm text-label-sm">Santuario</span>
-</button>
-<button class="nav-tab flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors" data-path="meditacion" type="button">
-<span class="material-symbols-outlined text-[22px]">self_improvement</span>
-<span class="font-label-sm text-label-sm">Meditación</span>
-</button>
-<button class="nav-tab flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors" data-path="diario" type="button">
-<span class="material-symbols-outlined text-[22px]">edit_note</span>
-<span class="font-label-sm text-label-sm">Diario</span>
-</button>
-<button class="nav-tab flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors" data-path="perfil" type="button">
-<span class="material-symbols-outlined text-[22px]">nest_clock_farsight_analog</span>
-<span class="font-label-sm text-label-sm">Paz interior</span>
-</button>
+</a>
+<a aria-current="page" class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-accent-magenta font-semibold drop-shadow-[0_0_8px_rgba(255,119,168,0.5)] transition-colors cursor-pointer" data-path="calma" href="#">
+<span class="material-symbols-outlined text-[22px]">air</span>
+<span class="font-label-sm text-label-sm">Calma</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="claridad" href="../ClaridadYDireccionInterior/code.html">
+<span class="material-symbols-outlined text-[22px]">explore</span>
+<span class="font-label-sm text-label-sm">Claridad</span>
+</a>
+<a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="expansion" href="../ExpancionDeConcienciaPlena/code.html">
+<span class="material-symbols-outlined text-[22px]">all_inclusive</span>
+<span class="font-label-sm text-label-sm">Expansión</span>
+</a>
 </div>
 </nav>
 <!-- Clean Native Web Audio API Implementation (Zero external assets needed) -->
