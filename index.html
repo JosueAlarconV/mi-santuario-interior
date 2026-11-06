@@ -590,6 +590,14 @@
         createCosmicRipple(e, enterSanctuaryBtn);
         playHarmonicBell(currentAnchorFreq || 639);
 
+        if (currentAnchorType === 'calma') {
+          showSacredToast('✦ Viajando a Tranquilidad & Calma Mental...');
+          setTimeout(() => {
+            window.location.href = 'TranquilidadYCalma/code.html';
+          }, 450);
+          return;
+        }
+
         if (currentAnchorType === 'expansion') {
           showSacredToast('✦ Viajando a Expansión & Consciencia Plena...');
           setTimeout(() => {
