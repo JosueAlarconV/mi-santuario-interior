@@ -86,10 +86,6 @@
     padding: 0;
     background-color: #0F051D;
     color: #F7F2FA;
-    background-image: 
-      radial-gradient(ellipse 90% 40% at 50% -10%, rgba(157, 78, 221, 0.22), transparent 70%),
-      radial-gradient(ellipse 80% 50% at 90% 60%, rgba(255, 119, 168, 0.12), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 10% 85%, rgba(138, 43, 226, 0.18), transparent 70%);
     background-attachment: fixed;
   }
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -125,6 +121,11 @@
   50% { box-shadow: 0 0 45px rgba(255, 119, 168, 0.75), 0 0 80px rgba(157, 78, 221, 0.6); }
 }
 
+@keyframes goldenHoldPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(255, 215, 0, 0.2); }
+  50% { box-shadow: 0 0 35px rgba(255, 215, 0, 0.5), inset 0 0 25px rgba(255, 215, 0, 0.35); }
+}
+
 .portal-pulse {
   animation: portalGlowPulse 2.8s ease-in-out infinite;
 }
@@ -145,16 +146,184 @@
   animation: nebulaBreathe 14s ease-in-out infinite;
 }
 
+.hold-gold-glow {
+  animation: goldenHoldPulse 2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-twinkle, .animate-sparkle, .animate-nebula, .portal-pulse, .cosmic-ripple-wave {
+  .animate-twinkle, .animate-sparkle, .animate-nebula, .portal-pulse, .cosmic-ripple-wave, .hold-gold-glow {
     animation: none !important;
   }
 }
-</style></head><body class="min-h-full bg-surface text-on-surface font-body-md text-body-md flex flex-col antialiased selection:bg-accent-magenta selection:text-white relative"><div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+</style></head><body class="min-h-full bg-surface text-on-surface font-body-md text-body-md flex flex-col antialiased selection:bg-accent-magenta selection:text-white relative">
+<!-- Persistent Interactive WebGL Background Shader -->
+<!-- STITCH_SHADER_START:ANIMATION_47 class="fixed inset-0 w-full h-full pointer-events-none z-0" -->
+<div class="fixed inset-0 w-full h-full pointer-events-none z-0" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_47" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_47');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform vec2 u_mouse;
+varying vec2 v_texCoord;
+
+// Simplex / hash noise generator
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i + vec2(0.0, 0.0)), hash(i + vec2(1.0, 0.0)), u.x),
+               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+
+void main() {
+    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+    
+    // Normalized mouse interaction
+    vec2 mouseNorm = (u_mouse.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+    float distMouse = length(uv - mouseNorm);
+    vec2 mouseInfluence = normalize(uv - mouseNorm + 0.0001) * exp(-distMouse * 3.2) * 0.14;
+    
+    // Meditative slow breathing cycle (~5s loop)
+    float breathe = sin(u_time * 0.7) * 0.5 + 0.5;
+    float flowTime = u_time * 0.38;
+    
+    vec2 st = uv + mouseInfluence;
+    
+    // Spiritual cosmic palette: #0e0d13 deep cosmic night, #8b5cf6 mystical violet, #ec4899 neon magenta, #38bdf8 luminous cyan vein
+    vec3 colDeepBg = vec3(0.045, 0.040, 0.065);
+    vec3 colViolet = vec3(0.58, 0.22, 0.95);
+    vec3 colNeonPink = vec3(0.96, 0.26, 0.65);
+    vec3 colCyanVein = vec3(0.32, 0.78, 0.98);
+    vec3 colLavender = vec3(0.85, 0.68, 0.99);
+    
+    vec3 finalColor = colDeepBg;
+
+    // Organic bundled fluid veins / neon cables flowing like living water
+    for (float i = 1.0; i <= 6.0; i += 1.0) {
+        float speed = flowTime * (0.85 + 0.2 * i);
+        float freq = 2.1 + i * 0.75;
+        
+        float wave = sin(st.y * freq + speed + sin(st.x * 2.8 + speed * 0.5)) * 0.28;
+        wave += cos(st.y * (freq * 0.48) - speed * 0.7) * 0.14;
+        
+        float cableCenter = (i - 3.5) * 0.17 + wave;
+        float d = abs(st.x - cableCenter);
+        
+        float veinWidth = 0.008 + 0.005 * sin(u_time * 0.8 + i * 1.3);
+        float pulse = 0.72 + 0.28 * breathe;
+        
+        // Intense core vein
+        float intensity = smoothstep(veinWidth * 3.2, 0.0004, d) * pulse;
+        
+        // Ethereal ambient halo
+        float auraGlow = exp(-d * (13.5 - breathe * 3.5)) * 0.48 * pulse;
+        
+        vec3 strandColor = mix(colViolet, colNeonPink, sin(i * 1.5 + flowTime) * 0.5 + 0.5);
+        if (mod(i, 2.0) == 0.0) {
+            strandColor = mix(strandColor, colCyanVein, 0.35);
+        }
+        
+        finalColor += strandColor * (intensity * 1.25 + auraGlow);
+    }
+    
+    // Bioluminescent secondary ripples
+    for (float j = 1.0; j <= 3.0; j += 1.0) {
+        float capD = abs(st.y - (sin(st.x * 2.6 + flowTime * 0.75 + j * 1.8) * 0.32));
+        float capillaryGlow = exp(-capD * 20.0) * (0.12 + 0.14 * breathe);
+        finalColor += colLavender * capillaryGlow * 0.45;
+    }
+    
+    // Vignette
+    float vignette = 1.0 - smoothstep(0.35, 1.45, length(uv));
+    finalColor *= vignette;
+    finalColor = clamp(finalColor, 0.0, 1.0);
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_47 -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
 <!-- Soft Floating Nebula Clouds -->
-<div class="absolute -top-20 left-1/4 w-[380px] h-[380px] rounded-full bg-gradient-to-br from-[#9D4EDD]/15 via-[#4A1278]/20 to-transparent blur-[85px] animate-nebula" style="animation-delay: 0s;"></div>
-<div class="absolute top-1/3 -right-24 w-[320px] h-[320px] rounded-full bg-gradient-to-bl from-accent-magenta/12 via-[#2E1052]/25 to-transparent blur-[75px] animate-nebula" style="animation-delay: -5s;"></div>
-<div class="absolute bottom-1/4 -left-20 w-[360px] h-[360px] rounded-full bg-gradient-to-tr from-[#9D4EDD]/15 via-[#1D1035]/30 to-transparent blur-[80px] animate-nebula" style="animation-delay: -9s;"></div>
+<div class="absolute -top-20 left-1/4 w-[380px] h-[380px] rounded-full bg-gradient-to-br from-[#9D4EDD]/10 via-[#4A1278]/15 to-transparent blur-[85px] animate-nebula" style="animation-delay: 0s;"></div>
+<div class="absolute top-1/3 -right-24 w-[320px] h-[320px] rounded-full bg-gradient-to-bl from-accent-magenta/10 via-[#2E1052]/20 to-transparent blur-[75px] animate-nebula" style="animation-delay: -5s;"></div>
+<div class="absolute bottom-1/4 -left-20 w-[360px] h-[360px] rounded-full bg-gradient-to-tr from-[#9D4EDD]/10 via-[#1D1035]/25 to-transparent blur-[80px] animate-nebula" style="animation-delay: -9s;"></div>
 <!-- Subtle Starfield Dust -->
 <div class="absolute top-[8%] left-[12%] w-[2px] h-[2px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 3.2s; animation-delay: 0.2s;"></div>
 <div class="absolute top-[14%] right-[18%] w-[1.5px] h-[1.5px] rounded-full bg-white animate-twinkle" style="--twinkle-dur: 4.1s; animation-delay: 1.5s;"></div>
@@ -178,23 +347,22 @@
 <div class="absolute top-[74%] right-[8%] animate-sparkle" style="--sparkle-dur: 5.8s; animation-delay: 1.6s;">
 <svg class="w-3.5 h-3.5 text-[#E0AAFF]" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z"></path></svg>
 </div>
-</div><header class="fixed top-0 w-full z-50 pt-safe bg-[#0F051D]/80 backdrop-blur-xl border-b border-[#9D4EDD]/20 shadow-[0_4px_24px_rgba(0,0,0,0.5)]"><div class="h-16 px-margin-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-[#9D4EDD]/25 border border-[#E0AAFF]/30 flex items-center justify-center text-accent-lavender shadow-[0_0_12px_rgba(224,170,255,0.35)]"><span class="material-symbols-outlined text-[19px]">spa</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-medium tracking-tight text-on-surface leading-none">Aura</span><span class="font-label-sm text-[10px] text-[#B592D9] uppercase tracking-widest leading-none mt-0.5">Santuario</span></div></div><div class="flex items-center gap-space-sm"><button class="cursor-pointer relative overflow-hidden h-9 px-space-md rounded-full bg-gradient-to-r from-accent-magenta to-secondary hover:brightness-115 active:scale-95 text-white font-label-md text-label-md font-semibold flex items-center justify-center transition-all duration-200 shadow-[0_0_16px_rgba(255,119,168,0.4)] hover:shadow-[0_0_24px_rgba(255,119,168,0.65)]" data-path="iniciar-viaje" id="header-journey-btn">Iniciar viaje</button><div class="w-8 h-8 rounded-full bg-surface-container border border-[#9D4EDD]/40 flex items-center justify-center text-accent-lavender cursor-pointer hover:border-accent-lavender/60 transition-colors"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-transparent min-h-screen z-10"><div class="flex flex-col w-full px-margin-mobile pb-space-xl space-y-space-xl">
-<!-- Subtle Editorial Category Bar -->
+</div><header class="fixed top-0 w-full z-50 pt-safe bg-[#0F051D]/75 backdrop-blur-xl border-b border-[#9D4EDD]/20 shadow-[0_4px_24px_rgba(0,0,0,0.5)]"><div class="h-16 px-margin-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-[#9D4EDD]/25 border border-[#E0AAFF]/30 flex items-center justify-center text-accent-lavender shadow-[0_0_12px_rgba(224,170,255,0.35)]"><span class="material-symbols-outlined text-[19px]">spa</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-medium tracking-tight text-on-surface leading-none">Aura</span><span class="font-label-sm text-[10px] text-[#B592D9] uppercase tracking-widest leading-none mt-0.5">Santuario</span></div></div><div class="flex items-center gap-space-sm"><button class="cursor-pointer relative overflow-hidden h-9 px-space-md rounded-full bg-gradient-to-r from-accent-magenta to-secondary hover:brightness-115 active:scale-95 text-white font-label-md text-label-md font-semibold flex items-center justify-center transition-all duration-200 shadow-[0_0_16px_rgba(255,119,168,0.4)] hover:shadow-[0_0_24px_rgba(255,119,168,0.65)]" data-path="iniciar-viaje" id="header-journey-btn">Iniciar viaje</button><div class="w-8 h-8 rounded-full bg-surface-container/70 border border-[#9D4EDD]/40 flex items-center justify-center text-accent-lavender cursor-pointer hover:border-accent-lavender/60 transition-colors" onclick="document.getElementById('header-journey-btn').click()"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-transparent min-h-screen z-10"><div class="flex flex-col w-full px-margin-mobile pb-space-xl space-y-space-xl">
 <!-- Hero Section -->
-<section class="relative flex flex-col items-center text-center pt-6 pb-2 px-2 space-y-6 overflow-visible"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-tr from-[#9D4EDD]/15 via-accent-magenta/10 to-transparent blur-3xl pointer-events-none -z-10"></div><div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1D1035]/60 border border-[#E0AAFF]/20 text-accent-lavender backdrop-blur-md shadow-[0_0_12px_rgba(157,78,221,0.15)]"><span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse"></span><span class="font-label-sm text-[10px] tracking-widest uppercase text-[#E0AAFF] font-medium">Espacio de quietud &amp; consciencia</span></div><div class="space-y-3 max-w-sm mx-auto"><h1 class="font-headline-lg-mobile text-[32px] leading-[42px] tracking-tight text-[#F7F2FA] font-normal">El viaje más profundo no es hacia afuera, sino <span class="italic font-display-mobile text-[36px] text-transparent bg-clip-text bg-gradient-to-r from-accent-lavender via-[#C77DFF] to-accent-magenta drop-shadow-[0_0_16px_rgba(224,170,255,0.4)]">hacia adentro</span>.</h1><p class="font-body-md text-sm text-[#D8CDE4] leading-relaxed max-w-[320px] mx-auto opacity-90">Herramientas conscientes, respiración somática y sabiduría atemporal para reconectar con tu esencia.</p></div><div class="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-1 max-w-xs mx-auto"><button class="cursor-pointer relative overflow-hidden w-full h-11 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-[#0F051D] font-label-md text-xs font-bold tracking-wider uppercase shadow-[0_0_20px_rgba(255,119,168,0.4)] hover:shadow-[0_0_28px_rgba(255,119,168,0.7)] flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-110" id="hero-journey-btn">Comenzar viaje interior</button><button class="cursor-pointer inline-flex items-center justify-center gap-2 py-2 px-4 rounded-full text-accent-lavender hover:text-white font-label-md text-xs tracking-wide transition-all group" id="guide-audio-btn"><span class="material-symbols-outlined text-[18px] text-accent-magenta transition-transform group-hover:scale-110">play_circle</span><span class="text-[#D8CDE4] group-hover:text-white transition-colors">Escuchar audio guía</span></button></div></section>
+<section class="relative flex flex-col items-center text-center pt-6 pb-2 px-2 space-y-6 overflow-visible"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-tr from-[#9D4EDD]/15 via-accent-magenta/10 to-transparent blur-3xl pointer-events-none -z-10"></div><div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1D1035]/50 border border-[#E0AAFF]/20 text-accent-lavender backdrop-blur-md shadow-[0_0_12px_rgba(157,78,221,0.15)]"><span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse"></span><span class="font-label-sm text-[10px] tracking-widest uppercase text-[#E0AAFF] font-medium">Espacio de quietud &amp; consciencia</span></div><div class="space-y-3 max-w-sm mx-auto"><h1 class="font-headline-lg-mobile text-[32px] leading-[42px] tracking-tight text-[#F7F2FA] font-normal">El viaje más profundo no es hacia afuera, sino <span class="italic font-display-mobile text-[36px] text-transparent bg-clip-text bg-gradient-to-r from-accent-lavender via-[#C77DFF] to-accent-magenta drop-shadow-[0_0_16px_rgba(224,170,255,0.4)]">hacia adentro</span>.</h1><p class="font-body-md text-sm text-[#D8CDE4] leading-relaxed max-w-[320px] mx-auto opacity-90">Herramientas conscientes, respiración somática y sabiduría atemporal para reconectar con tu esencia.</p></div><div class="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-1 max-w-xs mx-auto"><button class="cursor-pointer relative overflow-hidden w-full h-11 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-[#0F051D] font-label-md text-xs font-bold tracking-wider uppercase shadow-[0_0_20px_rgba(255,119,168,0.4)] hover:shadow-[0_0_28px_rgba(255,119,168,0.7)] flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-110" id="hero-journey-btn">Comenzar viaje interior</button><button class="cursor-pointer inline-flex items-center justify-center gap-2 py-2 px-4 rounded-full text-accent-lavender hover:text-white font-label-md text-xs tracking-wide transition-all group" id="guide-audio-btn"><span class="material-symbols-outlined text-[18px] text-accent-magenta transition-transform group-hover:scale-110">play_circle</span><span class="text-[#D8CDE4] group-hover:text-white transition-colors">Escuchar audio guía</span></button></div></section>
 <!-- Visual Showcase Centerpiece (Mystical Glassmorphic Card Preview) -->
-<section class="relative w-full rounded-2xl bg-surface-container/75 border border-[#9D4EDD]/35 backdrop-blur-xl p-space-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col space-y-space-md">
+<section class="relative w-full rounded-2xl bg-[#1D1035]/60 border border-[#9D4EDD]/35 backdrop-blur-xl p-space-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col space-y-space-md">
 <!-- Ambient Luminous Halo Background -->
-<div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-[#9D4EDD]/25 blur-3xl pointer-events-none"></div>
-<div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-accent-magenta/20 blur-3xl pointer-events-none"></div>
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-[#8A2BE2]/15 blur-3xl pointer-events-none"></div>
+<div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-[#9D4EDD]/20 blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-accent-magenta/15 blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-[#8A2BE2]/10 blur-3xl pointer-events-none"></div>
 <!-- Card Header -->
 <div class="flex items-center justify-between relative z-10">
 <div class="flex items-center gap-space-xs">
 <span class="w-2 h-2 rounded-full bg-accent-magenta shadow-[0_0_8px_#FF77A8]"></span>
 <span class="font-label-sm text-label-sm uppercase tracking-widest text-[#B592D9]">Ritual del día</span>
 </div>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-highest/80 border border-[#9D4EDD]/30 text-accent-lavender font-label-sm text-label-sm">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-highest/60 border border-[#9D4EDD]/30 text-accent-lavender font-label-sm text-label-sm backdrop-blur-md">
         Edición Matutina
       </span>
 </div>
@@ -209,7 +377,7 @@
 <button class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer" id="mode-box-btn">
     4-4-4-4 Box Breathing
   </button>
-<button class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/80 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer" id="mode-calm-btn">
+<button class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/60 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer backdrop-blur-md" id="mode-calm-btn">
     Calma 4-7-8
   </button>
 </div>
@@ -219,51 +387,52 @@
 <div class="absolute w-52 h-52 rounded-full bg-gradient-to-tr from-accent-magenta/35 via-cosmic-violet/30 to-accent-lavender/25 blur-2xl transition-all ease-in-out duration-1000 scale-100 opacity-80" id="orb-outer-glow"></div>
 <div class="absolute w-44 h-44 rounded-full border border-accent-magenta/30 bg-[#9D4EDD]/20 blur-md transition-all ease-in-out duration-1000 scale-100" id="orb-mid-glow"></div>
 <!-- Animated Scale Core Orb -->
-<div class="relative w-32 h-32 rounded-full shadow-[0_0_30px_rgba(157,78,221,0.5)] border border-[#E0AAFF]/40 flex flex-col items-center justify-center transition-transform ease-in-out duration-1000 transform scale-100 bg-gradient-to-br from-[#2E1052] via-[#1D1035] to-[#4A1278] backdrop-blur-md" id="orb-core">
+<div class="relative w-32 h-32 rounded-full shadow-[0_0_30px_rgba(157,78,221,0.5)] border border-[#E0AAFF]/40 flex flex-col items-center justify-center transition-all ease-in-out duration-1000 transform scale-100 bg-gradient-to-br from-[#2E1052]/90 via-[#1D1035]/90 to-[#4A1278]/90 backdrop-blur-md" id="orb-core">
 <!-- Subtle Inner Rings -->
 <div class="absolute inset-1.5 rounded-full border border-accent-lavender/20 pointer-events-none"></div>
 <div class="absolute inset-4 rounded-full border border-accent-magenta/25 pointer-events-none"></div>
 <!-- Center Icon & Instruction -->
-<span class="material-symbols-outlined text-accent-lavender text-[22px] mb-0.5 drop-shadow-[0_0_8px_#E0AAFF]" id="orb-icon">air</span>
-<span class="font-headline-sm text-base font-medium text-white tracking-tight drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]" id="breath-phase-text">Inhala</span>
+<span class="material-symbols-outlined text-accent-lavender text-[22px] mb-0.5 drop-shadow-[0_0_8px_#E0AAFF] transition-all duration-300" id="orb-icon">air</span>
+<span class="font-headline-sm text-base font-medium text-white tracking-tight drop-shadow-[0_0_6px_rgba(255,255,255,0.4)] transition-all duration-300" id="breath-phase-text">Inhala</span>
 <span class="font-label-sm text-label-sm text-accent-magenta font-bold mt-0.5 drop-shadow-[0_0_6px_#FF77A8]" id="breath-countdown">4s</span>
 </div>
 <!-- Touch Overlay Cue -->
-<div class="absolute -bottom-3 px-3 py-0.5 rounded-full bg-surface-container-lowest/95 backdrop-blur-md border border-[#9D4EDD]/40 shadow-lg text-[#D8CDE4] font-label-sm text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+<div class="absolute -bottom-3 px-3 py-0.5 rounded-full bg-surface-container-lowest/85 backdrop-blur-md border border-[#9D4EDD]/40 shadow-lg text-[#D8CDE4] font-label-sm text-[10px] uppercase tracking-wider flex items-center gap-1.5">
 <span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse" id="orb-status-dot"></span>
-<span id="orb-status-text">Ciclo 1 • Activo</span>
+<span id="orb-status-text">• CICLO 1 • ACTIVO</span>
 </div>
 </div>
 <!-- Contemplative Quote -->
 <div class="px-space-sm max-w-xs pt-2">
-<p class="font-headline-sm italic text-body-lg text-[#F7F2FA] leading-snug drop-shadow-sm">
+<p class="font-headline-sm italic text-body-lg text-[#F7F2FA] leading-snug drop-shadow-sm transition-opacity duration-500" id="ritual-quote">
           «En la quietud habita la respuesta que el ruido dispersa.»
         </p>
 </div>
 </div>
 <!-- Audio Player Interactive Component -->
-<div class="relative z-10 bg-surface-container-low/90 border border-[#9D4EDD]/30 rounded-xl p-space-md space-y-space-sm shadow-inner" id="audio-player">
+<div class="relative z-10 bg-surface-container-low/70 border border-[#9D4EDD]/30 rounded-xl p-space-md space-y-space-sm shadow-inner backdrop-blur-md" id="audio-player">
 <div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
-<span id="player-current-time">03:42</span>
-<div class="flex items-center gap-1.5 text-accent-lavender">
-<span class="material-symbols-outlined text-[16px] text-accent-magenta drop-shadow-[0_0_4px_#FF77A8]">waves</span>
-<span class="font-label-sm text-label-sm tracking-wide">Frecuencia 432Hz</span>
-</div>
-<span>07:00</span>
+<span class="font-mono" id="player-current-time">03:42</span>
+<!-- Frequency 432Hz button toggleable -->
+<button class="flex items-center gap-1.5 text-accent-lavender px-2.5 py-0.5 rounded-full bg-surface-container-high/60 border border-[#9D4EDD]/40 hover:border-accent-magenta/60 transition-all cursor-pointer" id="freq-toggle-btn" title="Activar/Desactivar Frecuencia 432Hz">
+<span class="material-symbols-outlined text-[16px] text-accent-magenta drop-shadow-[0_0_4px_#FF77A8] animate-pulse" id="freq-wave-icon">waves</span>
+<span class="font-label-sm text-label-sm tracking-wide" id="freq-label">Frecuencia 432Hz</span>
+</button>
+<span class="font-mono" id="player-total-time">07:00</span>
 </div>
 <!-- Audio Progress Bar with custom track -->
-<div class="relative w-full h-2 rounded-full bg-surface-container-highest cursor-pointer overflow-hidden border border-white/5" id="audio-scrubber">
-<div class="h-full bg-gradient-to-r from-secondary to-accent-magenta rounded-full transition-all duration-300 shadow-[0_0_12px_#FF77A8]" id="audio-progress-fill" style="width: 52%;"></div>
+<div class="relative w-full h-2 rounded-full bg-surface-container-highest/80 cursor-pointer overflow-hidden border border-white/5" id="audio-scrubber">
+<div class="h-full bg-gradient-to-r from-secondary to-accent-magenta rounded-full transition-all duration-300 shadow-[0_0_12px_#FF77A8]" id="audio-progress-fill" style="width: 52.8%;"></div>
 </div>
 <!-- Player Controls -->
 <div class="flex items-center justify-between pt-1">
-<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 transition-colors cursor-pointer">
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 active:scale-90 transition-all cursor-pointer" id="btn-back-10" title="Retroceder 10 segundos">
 <span class="material-symbols-outlined text-[20px]">replay_10</span>
 </button>
-<button class="w-12 h-12 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-white flex items-center justify-center shadow-[0_0_18px_rgba(255,119,168,0.5)] active:scale-95 transition-all hover:brightness-110 cursor-pointer" id="play-pause-btn" title="Iniciar o pausar respiración guiada">
+<button class="w-12 h-12 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-white flex items-center justify-center shadow-[0_0_18px_rgba(255,119,168,0.5)] active:scale-95 transition-all hover:brightness-110 cursor-pointer" id="play-pause-btn" title="Iniciar o pausar respiración y audio">
 <span class="material-symbols-outlined text-[26px]" id="play-icon" style="font-variation-settings: 'FILL' 1;">pause</span>
 </button>
-<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 transition-colors cursor-pointer">
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 active:scale-90 transition-all cursor-pointer" id="btn-fwd-10" title="Avanzar 10 segundos">
 <span class="material-symbols-outlined text-[20px]">forward_10</span>
 </button>
 </div>
@@ -275,48 +444,72 @@
 <span class="font-label-sm text-label-sm uppercase tracking-widest text-accent-magenta font-semibold drop-shadow-[0_0_6px_rgba(255,119,168,0.3)]">Fundamentos</span>
 <h3 class="font-headline-sm text-headline-sm text-[#F7F2FA]">Pilares de introspección</h3>
 </div>
-<div class="space-y-space-sm">
+<div class="space-y-space-sm" id="pillars-container">
 <!-- Pillar 1 -->
-<div class="bg-surface-container/60 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-sm flex items-start gap-space-md hover:border-[#9D4EDD]/50 transition-colors">
-<div class="w-10 h-10 rounded-full bg-primary-container border border-[#E0AAFF]/40 flex items-center justify-center flex-shrink-0 text-accent-lavender shadow-[0_0_10px_rgba(157,78,221,0.3)]">
+<div class="pillar-card cursor-pointer bg-surface-container/50 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-md flex flex-col space-y-2 hover:border-[#9D4EDD]/50 transition-all duration-300" data-pillar="1">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary-container/80 border border-[#E0AAFF]/40 flex items-center justify-center flex-shrink-0 text-accent-lavender shadow-[0_0_10px_rgba(157,78,221,0.3)]">
 <span class="font-headline-sm text-body-md font-semibold">01</span>
 </div>
-<div class="flex flex-col space-y-0.5">
+<div class="flex flex-col space-y-0.5 flex-1">
+<div class="flex items-center justify-between">
 <h4 class="font-headline-sm text-headline-sm text-[#F7F2FA] text-base">Prácticas Guiadas</h4>
+<span class="material-symbols-outlined text-[18px] text-[#B592D9] pillar-expand-icon transition-transform">expand_more</span>
+</div>
 <p class="font-body-sm text-body-sm text-on-surface-variant">
             Meditaciones somáticas y baños sonoros calibrados para devolver el sistema nervioso al centro.
           </p>
 </div>
 </div>
+<div class="pillar-details hidden pt-2 border-t border-white/10 text-xs text-[#E0AAFF] space-y-1">
+<p class="leading-relaxed">✦ Frecuencias binaurales alfa y delta disponibles con instrucciones paso a paso para disolver la tensión física acumulada.</p>
+</div>
+</div>
 <!-- Pillar 2 -->
-<div class="bg-surface-container/60 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-sm flex items-start gap-space-md hover:border-[#9D4EDD]/50 transition-colors">
-<div class="w-10 h-10 rounded-full bg-[#520025] border border-accent-magenta/40 flex items-center justify-center flex-shrink-0 text-accent-magenta shadow-[0_0_10px_rgba(255,119,168,0.3)]">
+<div class="pillar-card cursor-pointer bg-surface-container/50 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-md flex flex-col space-y-2 hover:border-[#9D4EDD]/50 transition-all duration-300" data-pillar="2">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-[#520025]/80 border border-accent-magenta/40 flex items-center justify-center flex-shrink-0 text-accent-magenta shadow-[0_0_10px_rgba(255,119,168,0.3)]">
 <span class="font-headline-sm text-body-md font-semibold">02</span>
 </div>
-<div class="flex flex-col space-y-0.5">
+<div class="flex flex-col space-y-0.5 flex-1">
+<div class="flex items-center justify-between">
 <h4 class="font-headline-sm text-headline-sm text-[#F7F2FA] text-base">Diario de Claridad</h4>
+<span class="material-symbols-outlined text-[18px] text-[#B592D9] pillar-expand-icon transition-transform">expand_more</span>
+</div>
 <p class="font-body-sm text-body-sm text-on-surface-variant">
             Preguntas reflexivas y micro-ensayos para desarmar bloqueos y afianzar tu propósito auténtico.
           </p>
 </div>
 </div>
+<div class="pillar-details hidden pt-2 border-t border-white/10 text-xs text-[#FF77A8] space-y-1">
+<p class="leading-relaxed">✦ Espacio íntimo protegido por cifrado local para vaciar la mente matutina sin juicios ni prisas.</p>
+</div>
+</div>
 <!-- Pillar 3 -->
-<div class="bg-surface-container/60 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-sm flex items-start gap-space-md hover:border-[#9D4EDD]/50 transition-colors">
-<div class="w-10 h-10 rounded-full bg-[#2E1052] border border-secondary/40 flex items-center justify-center flex-shrink-0 text-secondary shadow-[0_0_10px_rgba(199,125,255,0.3)]">
+<div class="pillar-card cursor-pointer bg-surface-container/50 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-md flex flex-col space-y-2 hover:border-[#9D4EDD]/50 transition-all duration-300" data-pillar="3">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-[#2E1052]/80 border border-secondary/40 flex items-center justify-center flex-shrink-0 text-secondary shadow-[0_0_10px_rgba(199,125,255,0.3)]">
 <span class="font-headline-sm text-body-md font-semibold">03</span>
 </div>
-<div class="flex flex-col space-y-0.5">
+<div class="flex flex-col space-y-0.5 flex-1">
+<div class="flex items-center justify-between">
 <h4 class="font-headline-sm text-headline-sm text-[#F7F2FA] text-base">Sabiduría Atemporal</h4>
+<span class="material-symbols-outlined text-[18px] text-[#B592D9] pillar-expand-icon transition-transform">expand_more</span>
+</div>
 <p class="font-body-sm text-body-sm text-on-surface-variant">
             Lecturas breves inspiradas en filosofía viva, budismo zen y estoicismo aplicado a la vida diaria.
           </p>
 </div>
 </div>
+<div class="pillar-details hidden pt-2 border-t border-white/10 text-xs text-[#C77DFF] space-y-1">
+<p class="leading-relaxed">✦ Aforismos curados para alimentar el desapego sereno y una mente inquebrantable a lo largo de tu jornada.</p>
+</div>
+</div>
 </div>
 </section>
 <!-- Community Sanctuary Invitation -->
-<section class="rounded-2xl bg-surface-container/70 border border-[#9D4EDD]/35 p-space-md text-center space-y-space-sm shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl relative overflow-hidden">
-<div class="w-10 h-10 mx-auto rounded-full bg-surface-container-highest border border-accent-magenta/35 flex items-center justify-center shadow-[0_0_14px_rgba(255,119,168,0.35)]">
+<section class="rounded-2xl bg-surface-container/60 border border-[#9D4EDD]/35 p-space-md text-center space-y-space-sm shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl relative overflow-hidden">
+<div class="w-10 h-10 mx-auto rounded-full bg-surface-container-highest/80 border border-accent-magenta/35 flex items-center justify-center shadow-[0_0_14px_rgba(255,119,168,0.35)]">
 <span class="material-symbols-outlined text-accent-magenta text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
 </div>
 <div class="space-y-1 max-w-xs mx-auto">
@@ -327,7 +520,7 @@
 </div>
 <div class="pt-space-xs flex flex-col gap-space-xs">
 <div class="relative w-full">
-<input class="w-full h-11 px-space-md rounded-full bg-surface-container-lowest/80 border border-[#9D4EDD]/40 text-on-surface font-body-sm text-body-sm placeholder:text-[#B592D9]/60 focus:outline-none focus:border-accent-magenta shadow-inner" id="newsletter-email" placeholder="tu@correo.com" type="email"/>
+<input class="w-full h-11 px-space-md rounded-full bg-surface-container-lowest/80 border border-[#9D4EDD]/40 text-on-surface font-body-sm text-body-sm placeholder:text-[#B592D9]/60 focus:outline-none focus:border-accent-magenta shadow-inner transition-colors" id="newsletter-email" placeholder="tu@correo.com" type="email"/>
 </div>
 <button class="cursor-pointer w-full h-11 rounded-full bg-gradient-to-r from-accent-magenta to-secondary hover:brightness-110 text-white font-label-md text-label-md font-semibold tracking-wide shadow-[0_0_18px_rgba(255,119,168,0.4)] transition-all active:scale-98" id="community-btn">
         Recibir dosis matutina
@@ -338,7 +531,7 @@
 </div>
 </section>
 </div>
-</main><nav class="fixed bottom-0 w-full z-40 pb-safe bg-[#0F051D]/90 backdrop-blur-xl border-t border-[#9D4EDD]/25 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-accent-magenta font-semibold"><div class="flex justify-around items-center h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 transition-colors text-accent-magenta font-semibold drop-shadow-[0_0_8px_rgba(255,119,168,0.5)] cursor-pointer" data-path="santuario" href="#"><span class="material-symbols-outlined text-[22px]">spa</span><span class="font-label-sm text-label-sm">Santuario</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="meditacion" href="ExpancionDeConciencia/code.html"><span class="material-symbols-outlined text-[22px]">all_inclusive</span><span class="font-label-sm text-label-sm">Expansión</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="diario" href="#"><span class="material-symbols-outlined text-[22px]">edit_note</span><span class="font-label-sm text-label-sm">Diario</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="perfil" href="#"><span class="material-symbols-outlined text-[22px]">nest_clock_farsight_analog</span><span class="font-label-sm text-label-sm">Paz interior</span></a></div></nav>
+</main><nav class="fixed bottom-0 w-full z-40 pb-safe bg-[#0F051D]/80 backdrop-blur-xl border-t border-[#9D4EDD]/25 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-accent-magenta font-semibold"><div class="flex justify-around items-center h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 transition-colors text-accent-magenta font-semibold drop-shadow-[0_0_8px_rgba(255,119,168,0.5)] cursor-pointer" data-path="santuario" href="#"><span class="material-symbols-outlined text-[22px]">spa</span><span class="font-label-sm text-label-sm">Santuario</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="calma" href="TranquilidadYCalmaMental/code.html"><span class="material-symbols-outlined text-[22px]">air</span><span class="font-label-sm text-label-sm">Calma</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="claridad" href="ClaridadYDireccionInterior/code.html"><span class="material-symbols-outlined text-[22px]">explore</span><span class="font-label-sm text-label-sm">Claridad</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="expansion" href="ExpancionDeConciencia/code.html"><span class="material-symbols-outlined text-[22px]">all_inclusive</span><span class="font-label-sm text-label-sm">Expansión</span></a></div></nav>
 <!-- Interactive Journey Portal Modal -->
 <div class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300" id="journey-modal">
 <div class="relative w-full max-w-sm rounded-3xl bg-gradient-to-b from-[#1D1035]/95 via-[#150A26]/95 to-[#0F051D]/98 border border-[#9D4EDD]/45 p-6 shadow-[0_16px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl flex flex-col space-y-5 portal-pulse transform scale-95 transition-transform duration-300" id="journey-modal-card">
@@ -412,51 +605,139 @@
 </div>
 <script>
   (function() {
-    // --- Synthesized Tibetan Bell / Harmonic Singing Bowl Sound (Web Audio API) ---
+    // --- Audio Synthesis Engine (432Hz Drone + Tibetan Bells + Clicks) ---
     let audioCtx = null;
-    function playHarmonicBell(freq = 432) {
-      try {
+    let droneGainNode = null;
+    let droneOsc1 = null;
+    let droneOsc2 = null;
+    let isDroneSoundActive = true;
+    let baseDroneFreq = 432;
+
+    function getAudioContext() {
+      if (!audioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-        if (!audioCtx) {
+        if (AudioContextClass) {
           audioCtx = new AudioContextClass();
         }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
 
+    function startDrone(freq = baseDroneFreq) {
+      if (!isDroneSoundActive) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      if (droneOsc1) {
+        // already running, update frequency smoothly
+        const now = ctx.currentTime;
+        droneOsc1.frequency.setTargetAtTime(freq, now, 0.1);
+        if (droneOsc2) droneOsc2.frequency.setTargetAtTime(freq / 2, now, 0.1);
+        return;
+      }
+
+      try {
+        const now = ctx.currentTime;
+        droneGainNode = ctx.createGain();
+        droneGainNode.gain.setValueAtTime(0, now);
+        droneGainNode.gain.linearRampToValueAtTime(0.08, now + 1.2);
+        droneGainNode.connect(ctx.destination);
+
+        // Primary pure sine wave (432 Hz)
+        droneOsc1 = ctx.createOscillator();
+        droneOsc1.type = 'sine';
+        droneOsc1.frequency.setValueAtTime(freq, now);
+        droneOsc1.connect(droneGainNode);
+        droneOsc1.start();
+
+        // Warm sub-harmonic octaval foundation (216 Hz)
+        droneOsc2 = ctx.createOscillator();
+        droneOsc2.type = 'sine';
+        droneOsc2.frequency.setValueAtTime(freq / 2, now);
+        droneOsc2.connect(droneGainNode);
+        droneOsc2.start();
+      } catch(e) {
+        console.warn('Drone start prevented:', e);
+      }
+    }
+
+    function stopDrone() {
+      if (!audioCtx || !droneGainNode) return;
+      try {
         const now = audioCtx.currentTime;
-        const masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.3, now);
-        masterGain.connect(audioCtx.destination);
+        droneGainNode.gain.setValueAtTime(droneGainNode.gain.value, now);
+        droneGainNode.gain.linearRampToValueAtTime(0.0001, now + 0.6);
+        setTimeout(() => {
+          if (droneOsc1) {
+            try { droneOsc1.stop(); droneOsc1.disconnect(); } catch(e){}
+            droneOsc1 = null;
+          }
+          if (droneOsc2) {
+            try { droneOsc2.stop(); droneOsc2.disconnect(); } catch(e){}
+            droneOsc2 = null;
+          }
+          droneGainNode = null;
+        }, 650);
+      } catch(e) {
+        console.warn(e);
+      }
+    }
 
-        // Harmonics configuration mimicking a gentle Tibetan singing bowl / meditation chime
+    function playTibetanChime(freq = 432) {
+      if (!isDroneSoundActive) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      try {
+        const now = ctx.currentTime;
+        const chimeGain = ctx.createGain();
+        chimeGain.gain.setValueAtTime(0.18, now);
+        chimeGain.connect(ctx.destination);
+
         const harmonics = [
-          { mult: 1, gain: 0.7, decay: 2.8 },
-          { mult: 2.76, gain: 0.25, decay: 2.2 },
-          { mult: 5.4, gain: 0.12, decay: 1.4 }
+          { mult: 1, gain: 0.6, decay: 2.5 },
+          { mult: 2.76, gain: 0.22, decay: 1.8 },
+          { mult: 5.4, gain: 0.08, decay: 1.2 }
         ];
 
         harmonics.forEach(h => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq * h.mult, now);
-          
-          gain.gain.setValueAtTime(0, now);
-          gain.gain.linearRampToValueAtTime(h.gain, now + 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + h.decay);
-
-          osc.connect(gain);
-          gain.connect(masterGain);
-
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(h.gain, now + 0.03);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + h.decay);
+          osc.connect(g);
+          g.connect(chimeGain);
           osc.start(now);
           osc.stop(now + h.decay);
         });
       } catch (e) {
-        console.warn('AudioContext init prevented:', e);
+        console.warn(e);
       }
+    }
+
+    function playClickSound() {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      try {
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
+        g.gain.setValueAtTime(0.05, now);
+        g.gain.linearRampToValueAtTime(0.0001, now + 0.05);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } catch(e){}
     }
 
     // --- Interactive Journey Portal Modal Logic ---
@@ -487,11 +768,14 @@
     }
 
     function createCosmicRipple(e, targetBtn) {
+      if (!targetBtn) return;
       const rect = targetBtn.getBoundingClientRect();
       const wave = document.createElement('span');
       const size = Math.max(rect.width, rect.height) * 1.6;
-      const x = (e.clientX || rect.left + rect.width / 2) - rect.left - size / 2;
-      const y = (e.clientY || rect.top + rect.height / 2) - rect.top - size / 2;
+      const clientX = e ? (e.clientX || rect.left + rect.width / 2) : (rect.left + rect.width / 2);
+      const clientY = e ? (e.clientY || rect.top + rect.height / 2) : (rect.top + rect.height / 2);
+      const x = clientX - rect.left - size / 2;
+      const y = clientY - rect.top - size / 2;
 
       wave.style.width = size + 'px';
       wave.style.height = size + 'px';
@@ -506,13 +790,7 @@
     function openJourneyModal(e, triggerBtn) {
       if (e) e.preventDefault();
       if (triggerBtn) createCosmicRipple(e, triggerBtn);
-
-      playHarmonicBell(currentAnchorFreq);
-
-      // Trigger subtle tactile body vibration if supported
-      if (navigator.vibrate) {
-        try { navigator.vibrate([40, 60, 40]); } catch(err){}
-      }
+      playTibetanChime(currentAnchorFreq);
 
       if (journeyModal && journeyModalCard) {
         journeyModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -581,14 +859,17 @@
           currentAnchorName = 'Expansión y Consciencia Plena';
         }
 
-        playHarmonicBell(currentAnchorFreq);
+        baseDroneFreq = currentAnchorFreq;
+        const freqLabel = document.getElementById('freq-label');
+        if (freqLabel) freqLabel.textContent = `Frecuencia ${currentAnchorFreq}Hz`;
+        playTibetanChime(currentAnchorFreq);
       });
     });
 
     if (enterSanctuaryBtn) {
       enterSanctuaryBtn.addEventListener('click', function(e) {
         createCosmicRipple(e, enterSanctuaryBtn);
-        playHarmonicBell(currentAnchorFreq || 639);
+        playTibetanChime(baseDroneFreq);
 
         if (currentAnchorType === 'calma') {
           showSacredToast('✦ Viajando a Tranquilidad & Calma Mental...');
@@ -616,12 +897,10 @@
 
         closeJourneyModal();
 
-        // Scroll gracefully to breathwork ritual
         const showcase = document.querySelector('section:nth-of-type(2)');
         if (showcase) {
           showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-
         showSacredToast('✦ Portal de Inmersión activado: ' + currentAnchorName);
       });
     }
@@ -629,12 +908,13 @@
     if (guideAudioBtn) {
       guideAudioBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        playHarmonicBell(432);
+        playTibetanChime(432);
         showSacredToast('✦ Guía de inmersión iniciada (432Hz)');
+        if (!isPlaying) togglePlayback();
       });
     }
 
-    // --- Breathwork Interactive Engine ---
+    // --- Ritual del Día: Interactive Breathwork Engine & Player ---
     const orbContainer = document.getElementById('breath-orb-container');
     const orbCore = document.getElementById('orb-core');
     const orbMidGlow = document.getElementById('orb-mid-glow');
@@ -646,25 +926,41 @@
     const orbIcon = document.getElementById('orb-icon');
     const modeBoxBtn = document.getElementById('mode-box-btn');
     const modeCalmBtn = document.getElementById('mode-calm-btn');
+    const ritualQuote = document.getElementById('ritual-quote');
 
     // Audio Player Elements
     const playPauseBtn = document.getElementById('play-pause-btn');
     const playIcon = document.getElementById('play-icon');
     const progressFill = document.getElementById('audio-progress-fill');
     const currentTimeEl = document.getElementById('player-current-time');
+    const totalTimeEl = document.getElementById('player-total-time');
+    const scrubber = document.getElementById('audio-scrubber');
+    const btnBack10 = document.getElementById('btn-back-10');
+    const btnFwd10 = document.getElementById('btn-fwd-10');
+    const freqToggleBtn = document.getElementById('freq-toggle-btn');
+    const freqWaveIcon = document.getElementById('freq-wave-icon');
+    const freqLabel = document.getElementById('freq-label');
 
-    // Breathing patterns: [ { name, duration, scale, icon } ]
+    // Quotes for patterns
+    const quotes = {
+      box: '«En la quietud habita la respuesta que el ruido dispersa.»',
+      calm: '«Exhala el pasado, inhala la paz pura del instante presente.»'
+    };
+
+    // Breathwork Patterns
+    // 4-4-4-4 Box Breathing: Inhala (4s), Sostén (4s), Exhala (4s), Sostén en vacío (4s)
     const boxPattern = [
-      { name: 'Inhala', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'north' },
-      { name: 'Sostén', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'pause' },
-      { name: 'Exhala', duration: 4, scale: 0.90, glowScale: 0.95, icon: 'south' },
-      { name: 'Pausa',  duration: 4, scale: 0.90, glowScale: 0.95, icon: 'horizontal_rule' }
+      { name: 'Inhala', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'north', stateType: 'inhale' },
+      { name: 'Sostén', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'pause', stateType: 'hold' },
+      { name: 'Exhala', duration: 4, scale: 0.90, glowScale: 0.95, icon: 'south', stateType: 'exhale' },
+      { name: 'Sostén en vacío', duration: 4, scale: 0.90, glowScale: 0.95, icon: 'horizontal_rule', stateType: 'hold_empty' }
     ];
 
+    // Calma 4-7-8: Inhala (4s), Sostén (7s), Exhala (8s)
     const calmPattern = [
-      { name: 'Inhala', duration: 4, scale: 1.30, glowScale: 1.40, icon: 'north' },
-      { name: 'Sostén', duration: 7, scale: 1.30, glowScale: 1.40, icon: 'pause' },
-      { name: 'Exhala', duration: 8, scale: 0.88, glowScale: 0.92, icon: 'south' }
+      { name: 'Inhala', duration: 4, scale: 1.30, glowScale: 1.40, icon: 'north', stateType: 'inhale' },
+      { name: 'Sostén', duration: 7, scale: 1.30, glowScale: 1.40, icon: 'pause', stateType: 'hold' },
+      { name: 'Exhala', duration: 8, scale: 0.88, glowScale: 0.92, icon: 'south', stateType: 'exhale' }
     ];
 
     let currentPattern = boxPattern;
@@ -674,12 +970,53 @@
     let isPlaying = true;
     let breathTimer = null;
 
-    function applyPhaseTransition(step) {
+    // Global session timer: 03:42 = 222 seconds out of 420 seconds (07:00)
+    let sessionCurrentSec = 222;
+    const sessionTotalSec = 420;
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = Math.floor(sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updatePlayerProgress() {
+      if (currentTimeEl) currentTimeEl.textContent = formatTime(sessionCurrentSec);
+      if (totalTimeEl) totalTimeEl.textContent = formatTime(sessionTotalSec);
+      if (progressFill) {
+        const pct = Math.min(100, Math.max(0, (sessionCurrentSec / sessionTotalSec) * 100));
+        progressFill.style.width = pct + '%';
+      }
+    }
+
+    function applyPhaseStyles(step) {
       if (!orbCore) return;
       const durationMs = step.duration * 1000;
       orbCore.style.transitionDuration = durationMs + 'ms';
       orbMidGlow.style.transitionDuration = durationMs + 'ms';
       orbOuterGlow.style.transitionDuration = durationMs + 'ms';
+
+      // Visual glow / expansion styling depending on active phase
+      orbCore.classList.remove('hold-gold-glow');
+      if (step.stateType === 'inhale') {
+        // Expande con resplandor magenta/lavanda
+        orbCore.style.borderColor = 'rgba(224, 170, 255, 0.7)';
+        orbCore.style.boxShadow = '0 0 38px rgba(255, 119, 168, 0.75), inset 0 0 20px rgba(224, 170, 255, 0.5)';
+        orbOuterGlow.style.opacity = '0.9';
+        orbOuterGlow.style.background = 'radial-gradient(circle, rgba(255,119,168,0.5) 0%, rgba(157,78,221,0.35) 60%, transparent 80%)';
+      } else if (step.stateType === 'hold' || step.stateType === 'hold_empty') {
+        // Pulso dorado suave estático
+        orbCore.classList.add('hold-gold-glow');
+        orbCore.style.borderColor = 'rgba(255, 215, 0, 0.6)';
+        orbOuterGlow.style.opacity = '0.75';
+        orbOuterGlow.style.background = 'radial-gradient(circle, rgba(255,215,0,0.3) 0%, rgba(199,125,255,0.3) 60%, transparent 80%)';
+      } else if (step.stateType === 'exhale') {
+        // Contracción serena
+        orbCore.style.borderColor = 'rgba(157, 78, 221, 0.5)';
+        orbCore.style.boxShadow = '0 0 24px rgba(157, 78, 221, 0.4), inset 0 0 12px rgba(15, 5, 29, 0.8)';
+        orbOuterGlow.style.opacity = '0.45';
+        orbOuterGlow.style.background = 'radial-gradient(circle, rgba(157,78,221,0.25) 0%, rgba(46,16,82,0.2) 60%, transparent 80%)';
+      }
 
       orbCore.style.transform = `scale(${step.scale})`;
       orbMidGlow.style.transform = `scale(${step.glowScale})`;
@@ -690,9 +1027,17 @@
       countdownEl.textContent = remainingStepSeconds + 's';
     }
 
-    function tickBreath() {
+    function tickTimer() {
       if (!isPlaying) return;
 
+      // 1. Advance global player seconds
+      sessionCurrentSec++;
+      if (sessionCurrentSec > sessionTotalSec) {
+        sessionCurrentSec = 0;
+      }
+      updatePlayerProgress();
+
+      // 2. Breathwork countdown
       countdownEl.textContent = remainingStepSeconds + 's';
       remainingStepSeconds--;
 
@@ -700,37 +1045,47 @@
         currentStepIdx = (currentStepIdx + 1) % currentPattern.length;
         if (currentStepIdx === 0) {
           cycleCount++;
-          if (orbStatusText) orbStatusText.textContent = `Ciclo ${cycleCount} • Activo`;
+          if (orbStatusText) orbStatusText.textContent = `• CICLO ${cycleCount} • ACTIVO`;
         }
         const nextStep = currentPattern[currentStepIdx];
         remainingStepSeconds = nextStep.duration;
-        applyPhaseTransition(nextStep);
+
+        // Play gentle chime on phase transition
+        playTibetanChime(baseDroneFreq);
+        applyPhaseStyles(nextStep);
       }
     }
 
     function startBreathing() {
       if (breathTimer) clearInterval(breathTimer);
-      applyPhaseTransition(currentPattern[currentStepIdx]);
-      breathTimer = setInterval(tickBreath, 1000);
+      applyPhaseStyles(currentPattern[currentStepIdx]);
+      breathTimer = setInterval(tickTimer, 1000);
+
       if (orbStatusDot) {
         orbStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse';
       }
-      if (orbStatusText) orbStatusText.textContent = `Ciclo ${cycleCount} • Activo`;
+      if (orbStatusText) orbStatusText.textContent = `• CICLO ${cycleCount} • ACTIVO`;
+
+      if (isDroneSoundActive) {
+        startDrone(baseDroneFreq);
+      }
     }
 
     function pauseBreathing() {
       if (breathTimer) clearInterval(breathTimer);
       if (orbCore) {
-        orbCore.style.transitionDuration = '500ms';
-        orbMidGlow.style.transitionDuration = '500ms';
-        orbOuterGlow.style.transitionDuration = '500ms';
+        orbCore.style.transitionDuration = '400ms';
+        orbMidGlow.style.transitionDuration = '400ms';
+        orbOuterGlow.style.transitionDuration = '400ms';
       }
       if (orbStatusDot) {
         orbStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-[#7B629E]';
       }
-      if (orbStatusText) orbStatusText.textContent = 'En pausa • Toca para continuar';
+      if (orbStatusText) orbStatusText.textContent = '• EN PAUSA • TOCA PARA CONTINUAR';
       phaseText.textContent = 'Pausa';
       orbIcon.textContent = 'play_arrow';
+
+      stopDrone();
     }
 
     function togglePlayback() {
@@ -754,6 +1109,7 @@
 
     // Pattern Switchers
     function setPattern(pattern, isBox) {
+      playClickSound();
       currentPattern = pattern;
       currentStepIdx = 0;
       remainingStepSeconds = currentPattern[0].duration;
@@ -761,16 +1117,30 @@
 
       if (isBox) {
         modeBoxBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer';
-        modeCalmBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/80 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer';
+        modeCalmBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/60 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer backdrop-blur-md';
+        if (ritualQuote) {
+          ritualQuote.style.opacity = '0';
+          setTimeout(() => {
+            ritualQuote.textContent = quotes.box;
+            ritualQuote.style.opacity = '1';
+          }, 250);
+        }
       } else {
         modeCalmBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer';
-        modeBoxBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/80 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer';
+        modeBoxBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/60 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer backdrop-blur-md';
+        if (ritualQuote) {
+          ritualQuote.style.opacity = '0';
+          setTimeout(() => {
+            ritualQuote.textContent = quotes.calm;
+            ritualQuote.style.opacity = '1';
+          }, 250);
+        }
       }
 
       if (isPlaying) {
         startBreathing();
       } else {
-        applyPhaseTransition(currentPattern[0]);
+        applyPhaseStyles(currentPattern[0]);
       }
     }
 
@@ -781,26 +1151,85 @@
       modeCalmBtn.addEventListener('click', () => setPattern(calmPattern, false));
     }
 
-    // Initial Breathwork Start
-    startBreathing();
+    // Skip Buttons (-10s / +10s)
+    if (btnBack10) {
+      btnBack10.addEventListener('click', () => {
+        playClickSound();
+        sessionCurrentSec = Math.max(0, sessionCurrentSec - 10);
+        updatePlayerProgress();
+      });
+    }
+    if (btnFwd10) {
+      btnFwd10.addEventListener('click', () => {
+        playClickSound();
+        sessionCurrentSec = Math.min(sessionTotalSec, sessionCurrentSec + 10);
+        updatePlayerProgress();
+      });
+    }
 
-    // Audio Scrubber Simulation
-    const scrubber = document.getElementById('audio-scrubber');
-    if (scrubber && progressFill && currentTimeEl) {
+    // Audio Scrubber Interactive Click
+    if (scrubber) {
       scrubber.addEventListener('click', function(e) {
+        playClickSound();
         const rect = scrubber.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const ratio = Math.max(0, Math.min(1, clickX / rect.width));
-        const percentage = Math.round(ratio * 100);
-        progressFill.style.width = percentage + '%';
-
-        const totalSeconds = 420; // 07:00
-        const newSec = Math.floor(ratio * totalSeconds);
-        const mins = Math.floor(newSec / 60).toString().padStart(2, '0');
-        const secs = (newSec % 60).toString().padStart(2, '0');
-        currentTimeEl.textContent = mins + ':' + secs;
+        sessionCurrentSec = Math.floor(ratio * sessionTotalSec);
+        updatePlayerProgress();
       });
     }
+
+    // Frequency 432Hz button toggle
+    if (freqToggleBtn) {
+      freqToggleBtn.addEventListener('click', function() {
+        playClickSound();
+        isDroneSoundActive = !isDroneSoundActive;
+        if (isDroneSoundActive) {
+          if (freqWaveIcon) {
+            freqWaveIcon.className = 'material-symbols-outlined text-[16px] text-accent-magenta drop-shadow-[0_0_4px_#FF77A8] animate-pulse';
+          }
+          if (freqLabel) freqLabel.className = 'font-label-sm text-label-sm tracking-wide text-accent-lavender';
+          if (isPlaying) startDrone(baseDroneFreq);
+          showSacredToast(`✦ Tono ${baseDroneFreq}Hz Activado`);
+        } else {
+          if (freqWaveIcon) {
+            freqWaveIcon.className = 'material-symbols-outlined text-[16px] text-[#7B629E]';
+          }
+          if (freqLabel) freqLabel.className = 'font-label-sm text-label-sm tracking-wide text-[#7B629E]';
+          stopDrone();
+          showSacredToast('✦ Tono sonoro silenciado');
+        }
+      });
+    }
+
+    // --- Interactive Pillars of Introspection ---
+    const pillarCards = document.querySelectorAll('.pillar-card');
+    pillarCards.forEach(card => {
+      card.addEventListener('click', function() {
+        playClickSound();
+        const isCurrentlyExpanded = card.classList.contains('border-accent-magenta');
+        
+        // Reset all
+        pillarCards.forEach(c => {
+          c.classList.remove('border-accent-magenta', 'bg-surface-container-high/70', 'shadow-[0_0_20px_rgba(255,119,168,0.25)]');
+          c.classList.add('border-[#9D4EDD]/25', 'bg-surface-container/50');
+          const details = c.querySelector('.pillar-details');
+          if (details) details.classList.add('hidden');
+          const icon = c.querySelector('.pillar-expand-icon');
+          if (icon) icon.style.transform = 'rotate(0deg)';
+        });
+
+        // Toggle clicked
+        if (!isCurrentlyExpanded) {
+          card.classList.add('border-accent-magenta', 'bg-surface-container-high/70', 'shadow-[0_0_20px_rgba(255,119,168,0.25)]');
+          card.classList.remove('border-[#9D4EDD]/25', 'bg-surface-container/50');
+          const details = card.querySelector('.pillar-details');
+          if (details) details.classList.remove('hidden');
+          const icon = card.querySelector('.pillar-expand-icon');
+          if (icon) icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
 
     // Community Signup Feedback
     const commBtn = document.getElementById('community-btn');
@@ -810,15 +1239,21 @@
     if (commBtn && commFeedback && commInput) {
       commBtn.addEventListener('click', function() {
         if (commInput.value.trim() !== '') {
-          playHarmonicBell(528);
+          playTibetanChime(528);
           commFeedback.classList.remove('opacity-0');
           commFeedback.classList.add('opacity-100');
-          commBtn.textContent = 'Inscrito con paz';
+          commBtn.textContent = 'Inscrito con paz ✦';
           commBtn.disabled = true;
+          commInput.disabled = true;
+          showSacredToast('✦ Bienvenida al santuario de calma diaria');
         } else {
           commInput.focus();
         }
       });
     }
+
+    // Auto-initialize timer and breath on page load
+    updatePlayerProgress();
+    startBreathing();
   })();
 </script></body></html>
