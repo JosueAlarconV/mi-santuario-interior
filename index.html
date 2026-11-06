@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface": "#0F051D",
+        "surface-dim": "#0A0214",
+        "background": "#0F051D",
+        "surface-container-lowest": "#080112",
+        "surface-container-low": "#150A26",
+        "surface-container": "#1D1035",
+        "surface-container-high": "#271644",
+        "surface-container-highest": "#36205C",
+        "on-surface": "#F7F2FA",
+        "on-background": "#F7F2FA",
+        "on-surface-variant": "#D8CDE4",
+        "outline": "#7B629E",
+        "outline-variant": "#493366",
+        "primary": "#E0AAFF",
+        "primary-container": "#4A1278",
+        "on-primary": "#240046",
+        "on-primary-container": "#F5E6FF",
+        "secondary": "#C77DFF",
+        "secondary-container": "#2E1052",
+        "on-secondary": "#10002B",
+        "tertiary": "#FF77A8",
+        "tertiary-container": "#520025",
+        "on-tertiary": "#3D0019",
+        "on-tertiary-container": "#FFD9E4",
+        "accent-magenta": "#FF77A8",
+        "accent-lavender": "#E0AAFF",
+        "cosmic-violet": "#9D4EDD"
+      },
+      borderRadius: {
+        "DEFAULT": "1rem",
+        "lg": "2rem",
+        "xl": "3rem",
+        "full": "9999px"
+      },
+      spacing: {
+        "space-xl": "2.5rem",
+        "space-lg": "1.75rem",
+        "space-md": "1rem",
+        "margin-mobile": "1.25rem",
+        "space-xs": "0.25rem",
+        "gutter": "1.5rem",
+        "margin": "3rem",
+        "gutter-mobile": "1rem",
+        "space-sm": "0.5rem"
+      },
+      fontFamily: {
+        "headline-lg": ["Playfair Display"],
+        "body-sm": ["Plus Jakarta Sans"],
+        "label-sm": ["Plus Jakarta Sans"],
+        "label-md": ["Plus Jakarta Sans"],
+        "body-lg": ["Plus Jakarta Sans"],
+        "headline-lg-mobile": ["Playfair Display"],
+        "body-md": ["Plus Jakarta Sans"],
+        "headline-sm": ["Playfair Display"],
+        "display": ["Playfair Display"],
+        "headline-md": ["Playfair Display"],
+        "display-mobile": ["Playfair Display"]
+      },
+      fontSize: {
+        "headline-lg": ["40px", { lineHeight: "52px", letterSpacing: "-0.015em", fontWeight: "400" }],
+        "body-sm": ["13px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "400" }],
+        "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.08em", fontWeight: "600" }],
+        "label-md": ["13px", { lineHeight: "18px", letterSpacing: "0.04em", fontWeight: "600" }],
+        "body-lg": ["18px", { lineHeight: "30px", letterSpacing: "-0.005em", fontWeight: "400" }],
+        "headline-lg-mobile": ["28px", { lineHeight: "38px", letterSpacing: "-0.01em", fontWeight: "400" }],
+        "body-md": ["15px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+        "headline-sm": ["22px", { lineHeight: "30px", letterSpacing: "0em", fontWeight: "500" }],
+        "display": ["56px", { lineHeight: "68px", letterSpacing: "-0.02em", fontWeight: "400" }],
+        "headline-md": ["28px", { lineHeight: "38px", letterSpacing: "-0.01em", fontWeight: "400" }],
+        "display-mobile": ["38px", { lineHeight: "48px", letterSpacing: "-0.015em", fontWeight: "400" }]
+      }
+    }
+  }
+}</script><style>
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #0F051D;
+    color: #F7F2FA;
+    background-image: 
+      radial-gradient(ellipse 90% 40% at 50% -10%, rgba(157, 78, 221, 0.22), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 90% 60%, rgba(255, 119, 168, 0.12), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 10% 85%, rgba(138, 43, 226, 0.18), transparent 70%);
+    background-attachment: fixed;
+  }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+
+/* Cosmic Twinkle & Nebula Animations */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.85); }
+  50% { opacity: 0.95; transform: scale(1.2); }
+}
+
+@keyframes sparkleGlow {
+  0%, 100% { opacity: 0.1; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 0.9; transform: scale(1.15) rotate(45deg); filter: drop-shadow(0 0 6px rgba(224, 170, 255, 0.8)); }
+}
+
+@keyframes nebulaBreathe {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.25; }
+  50% { transform: scale(1.12) translate(-3%, 2%); opacity: 0.42; }
+}
+
+@keyframes cosmicRipple {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes portalGlowPulse {
+  0%, 100% { box-shadow: 0 0 25px rgba(255, 119, 168, 0.4), 0 0 50px rgba(157, 78, 221, 0.3); }
+  50% { box-shadow: 0 0 45px rgba(255, 119, 168, 0.75), 0 0 80px rgba(157, 78, 221, 0.6); }
+}
+
+.portal-pulse {
+  animation: portalGlowPulse 2.8s ease-in-out infinite;
+}
+
+.cosmic-ripple-wave {
+  animation: cosmicRipple 0.85s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.animate-twinkle {
+  animation: twinkle var(--twinkle-dur, 3.5s) ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkleGlow var(--sparkle-dur, 5s) ease-in-out infinite;
+}
+
+.animate-nebula {
+  animation: nebulaBreathe 14s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-twinkle, .animate-sparkle, .animate-nebula, .portal-pulse, .cosmic-ripple-wave {
+    animation: none !important;
+  }
+}
+</style></head><body class="min-h-full bg-surface text-on-surface font-body-md text-body-md flex flex-col antialiased selection:bg-accent-magenta selection:text-white relative"><div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<!-- Soft Floating Nebula Clouds -->
+<div class="absolute -top-20 left-1/4 w-[380px] h-[380px] rounded-full bg-gradient-to-br from-[#9D4EDD]/15 via-[#4A1278]/20 to-transparent blur-[85px] animate-nebula" style="animation-delay: 0s;"></div>
+<div class="absolute top-1/3 -right-24 w-[320px] h-[320px] rounded-full bg-gradient-to-bl from-accent-magenta/12 via-[#2E1052]/25 to-transparent blur-[75px] animate-nebula" style="animation-delay: -5s;"></div>
+<div class="absolute bottom-1/4 -left-20 w-[360px] h-[360px] rounded-full bg-gradient-to-tr from-[#9D4EDD]/15 via-[#1D1035]/30 to-transparent blur-[80px] animate-nebula" style="animation-delay: -9s;"></div>
+<!-- Subtle Starfield Dust -->
+<div class="absolute top-[8%] left-[12%] w-[2px] h-[2px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 3.2s; animation-delay: 0.2s;"></div>
+<div class="absolute top-[14%] right-[18%] w-[1.5px] h-[1.5px] rounded-full bg-white animate-twinkle" style="--twinkle-dur: 4.1s; animation-delay: 1.5s;"></div>
+<div class="absolute top-[22%] left-[28%] w-[2px] h-[2px] rounded-full bg-[#FF77A8] animate-twinkle" style="--twinkle-dur: 2.8s; animation-delay: 0.8s;"></div>
+<div class="absolute top-[28%] right-[10%] w-[1.5px] h-[1.5px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 4.8s; animation-delay: 2.1s;"></div>
+<div class="absolute top-[36%] left-[8%] w-[2.5px] h-[2.5px] rounded-full bg-white/90 animate-twinkle" style="--twinkle-dur: 3.6s; animation-delay: 1.1s;"></div>
+<div class="absolute top-[44%] right-[22%] w-[1.5px] h-[1.5px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 5.2s; animation-delay: 3s;"></div>
+<div class="absolute top-[52%] left-[16%] w-[2px] h-[2px] rounded-full bg-[#FF77A8] animate-twinkle" style="--twinkle-dur: 3.4s; animation-delay: 1.8s;"></div>
+<div class="absolute top-[61%] right-[12%] w-[2px] h-[2px] rounded-full bg-white animate-twinkle" style="--twinkle-dur: 4.4s; animation-delay: 0.5s;"></div>
+<div class="absolute top-[68%] left-[24%] w-[1.5px] h-[1.5px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 3.9s; animation-delay: 2.6s;"></div>
+<div class="absolute top-[77%] right-[26%] w-[2px] h-[2px] rounded-full bg-[#FF77A8] animate-twinkle" style="--twinkle-dur: 3.1s; animation-delay: 1.4s;"></div>
+<div class="absolute top-[85%] left-[10%] w-[1.5px] h-[1.5px] rounded-full bg-white animate-twinkle" style="--twinkle-dur: 4.6s; animation-delay: 3.2s;"></div>
+<div class="absolute top-[92%] right-[15%] w-[2px] h-[2px] rounded-full bg-[#E0AAFF] animate-twinkle" style="--twinkle-dur: 3.7s; animation-delay: 0.9s;"></div>
+<!-- Diamond / 4-Point Cosmic Sparkles -->
+<div class="absolute top-[18%] right-[8%] animate-sparkle" style="--sparkle-dur: 5.4s; animation-delay: 0.5s;">
+<svg class="w-3.5 h-3.5 text-[#E0AAFF]" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z"></path></svg>
+</div>
+<div class="absolute top-[48%] left-[6%] animate-sparkle" style="--sparkle-dur: 6.2s; animation-delay: 2.8s;">
+<svg class="w-3 h-3 text-[#FF77A8]" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z"></path></svg>
+</div>
+<div class="absolute top-[74%] right-[8%] animate-sparkle" style="--sparkle-dur: 5.8s; animation-delay: 1.6s;">
+<svg class="w-3.5 h-3.5 text-[#E0AAFF]" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z"></path></svg>
+</div>
+</div><header class="fixed top-0 w-full z-50 pt-safe bg-[#0F051D]/80 backdrop-blur-xl border-b border-[#9D4EDD]/20 shadow-[0_4px_24px_rgba(0,0,0,0.5)]"><div class="h-16 px-margin-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-[#9D4EDD]/25 border border-[#E0AAFF]/30 flex items-center justify-center text-accent-lavender shadow-[0_0_12px_rgba(224,170,255,0.35)]"><span class="material-symbols-outlined text-[19px]">spa</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-medium tracking-tight text-on-surface leading-none">Aura</span><span class="font-label-sm text-[10px] text-[#B592D9] uppercase tracking-widest leading-none mt-0.5">Santuario</span></div></div><div class="flex items-center gap-space-sm"><button class="cursor-pointer relative overflow-hidden h-9 px-space-md rounded-full bg-gradient-to-r from-accent-magenta to-secondary hover:brightness-115 active:scale-95 text-white font-label-md text-label-md font-semibold flex items-center justify-center transition-all duration-200 shadow-[0_0_16px_rgba(255,119,168,0.4)] hover:shadow-[0_0_24px_rgba(255,119,168,0.65)]" data-path="iniciar-viaje" id="header-journey-btn">Iniciar viaje</button><div class="w-8 h-8 rounded-full bg-surface-container border border-[#9D4EDD]/40 flex items-center justify-center text-accent-lavender cursor-pointer hover:border-accent-lavender/60 transition-colors"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-transparent min-h-screen z-10"><div class="flex flex-col w-full px-margin-mobile pb-space-xl space-y-space-xl">
+<!-- Subtle Editorial Category Bar -->
+<!-- Hero Section -->
+<section class="relative flex flex-col items-center text-center pt-6 pb-2 px-2 space-y-6 overflow-visible"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-tr from-[#9D4EDD]/15 via-accent-magenta/10 to-transparent blur-3xl pointer-events-none -z-10"></div><div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1D1035]/60 border border-[#E0AAFF]/20 text-accent-lavender backdrop-blur-md shadow-[0_0_12px_rgba(157,78,221,0.15)]"><span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse"></span><span class="font-label-sm text-[10px] tracking-widest uppercase text-[#E0AAFF] font-medium">Espacio de quietud &amp; consciencia</span></div><div class="space-y-3 max-w-sm mx-auto"><h1 class="font-headline-lg-mobile text-[32px] leading-[42px] tracking-tight text-[#F7F2FA] font-normal">El viaje más profundo no es hacia afuera, sino <span class="italic font-display-mobile text-[36px] text-transparent bg-clip-text bg-gradient-to-r from-accent-lavender via-[#C77DFF] to-accent-magenta drop-shadow-[0_0_16px_rgba(224,170,255,0.4)]">hacia adentro</span>.</h1><p class="font-body-md text-sm text-[#D8CDE4] leading-relaxed max-w-[320px] mx-auto opacity-90">Herramientas conscientes, respiración somática y sabiduría atemporal para reconectar con tu esencia.</p></div><div class="w-full flex flex-col sm:flex-row items-center justify-center gap-3 pt-1 max-w-xs mx-auto"><button class="cursor-pointer relative overflow-hidden w-full h-11 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-[#0F051D] font-label-md text-xs font-bold tracking-wider uppercase shadow-[0_0_20px_rgba(255,119,168,0.4)] hover:shadow-[0_0_28px_rgba(255,119,168,0.7)] flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-110" id="hero-journey-btn">Comenzar viaje interior</button><button class="cursor-pointer inline-flex items-center justify-center gap-2 py-2 px-4 rounded-full text-accent-lavender hover:text-white font-label-md text-xs tracking-wide transition-all group" id="guide-audio-btn"><span class="material-symbols-outlined text-[18px] text-accent-magenta transition-transform group-hover:scale-110">play_circle</span><span class="text-[#D8CDE4] group-hover:text-white transition-colors">Escuchar audio guía</span></button></div></section>
+<!-- Visual Showcase Centerpiece (Mystical Glassmorphic Card Preview) -->
+<section class="relative w-full rounded-2xl bg-surface-container/75 border border-[#9D4EDD]/35 backdrop-blur-xl p-space-md shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col space-y-space-md">
+<!-- Ambient Luminous Halo Background -->
+<div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-[#9D4EDD]/25 blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-accent-magenta/20 blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-[#8A2BE2]/15 blur-3xl pointer-events-none"></div>
+<!-- Card Header -->
+<div class="flex items-center justify-between relative z-10">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-accent-magenta shadow-[0_0_8px_#FF77A8]"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#B592D9]">Ritual del día</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-highest/80 border border-[#9D4EDD]/30 text-accent-lavender font-label-sm text-label-sm">
+        Edición Matutina
+      </span>
+</div>
+<!-- Title & Interactive Breathwork Centerpiece -->
+<div class="flex flex-col items-center text-center space-y-space-sm relative z-10 py-space-xs">
+<div class="space-y-1">
+<h2 class="font-headline-sm text-headline-sm text-[#F7F2FA] font-medium">Presencia y Apertura</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">7 minutos • Respiración somática &amp; Meditación sonora</p>
+</div>
+<!-- Rhythm Switcher Pills -->
+<div class="flex items-center justify-center gap-2 pt-1">
+<button class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer" id="mode-box-btn">
+    4-4-4-4 Box Breathing
+  </button>
+<button class="px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/80 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer" id="mode-calm-btn">
+    Calma 4-7-8
+  </button>
+</div>
+<!-- Guided Breathing Interactive Sphere Visualizer -->
+<div class="relative w-56 h-56 flex items-center justify-center my-2 cursor-pointer select-none group" id="breath-orb-container" title="Toca para pausar o reanudar">
+<!-- Outer Glow Rings -->
+<div class="absolute w-52 h-52 rounded-full bg-gradient-to-tr from-accent-magenta/35 via-cosmic-violet/30 to-accent-lavender/25 blur-2xl transition-all ease-in-out duration-1000 scale-100 opacity-80" id="orb-outer-glow"></div>
+<div class="absolute w-44 h-44 rounded-full border border-accent-magenta/30 bg-[#9D4EDD]/20 blur-md transition-all ease-in-out duration-1000 scale-100" id="orb-mid-glow"></div>
+<!-- Animated Scale Core Orb -->
+<div class="relative w-32 h-32 rounded-full shadow-[0_0_30px_rgba(157,78,221,0.5)] border border-[#E0AAFF]/40 flex flex-col items-center justify-center transition-transform ease-in-out duration-1000 transform scale-100 bg-gradient-to-br from-[#2E1052] via-[#1D1035] to-[#4A1278] backdrop-blur-md" id="orb-core">
+<!-- Subtle Inner Rings -->
+<div class="absolute inset-1.5 rounded-full border border-accent-lavender/20 pointer-events-none"></div>
+<div class="absolute inset-4 rounded-full border border-accent-magenta/25 pointer-events-none"></div>
+<!-- Center Icon & Instruction -->
+<span class="material-symbols-outlined text-accent-lavender text-[22px] mb-0.5 drop-shadow-[0_0_8px_#E0AAFF]" id="orb-icon">air</span>
+<span class="font-headline-sm text-base font-medium text-white tracking-tight drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]" id="breath-phase-text">Inhala</span>
+<span class="font-label-sm text-label-sm text-accent-magenta font-bold mt-0.5 drop-shadow-[0_0_6px_#FF77A8]" id="breath-countdown">4s</span>
+</div>
+<!-- Touch Overlay Cue -->
+<div class="absolute -bottom-3 px-3 py-0.5 rounded-full bg-surface-container-lowest/95 backdrop-blur-md border border-[#9D4EDD]/40 shadow-lg text-[#D8CDE4] font-label-sm text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse" id="orb-status-dot"></span>
+<span id="orb-status-text">Ciclo 1 • Activo</span>
+</div>
+</div>
+<!-- Contemplative Quote -->
+<div class="px-space-sm max-w-xs pt-2">
+<p class="font-headline-sm italic text-body-lg text-[#F7F2FA] leading-snug drop-shadow-sm">
+          «En la quietud habita la respuesta que el ruido dispersa.»
+        </p>
+</div>
+</div>
+<!-- Audio Player Interactive Component -->
+<div class="relative z-10 bg-surface-container-low/90 border border-[#9D4EDD]/30 rounded-xl p-space-md space-y-space-sm shadow-inner" id="audio-player">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span id="player-current-time">03:42</span>
+<div class="flex items-center gap-1.5 text-accent-lavender">
+<span class="material-symbols-outlined text-[16px] text-accent-magenta drop-shadow-[0_0_4px_#FF77A8]">waves</span>
+<span class="font-label-sm text-label-sm tracking-wide">Frecuencia 432Hz</span>
+</div>
+<span>07:00</span>
+</div>
+<!-- Audio Progress Bar with custom track -->
+<div class="relative w-full h-2 rounded-full bg-surface-container-highest cursor-pointer overflow-hidden border border-white/5" id="audio-scrubber">
+<div class="h-full bg-gradient-to-r from-secondary to-accent-magenta rounded-full transition-all duration-300 shadow-[0_0_12px_#FF77A8]" id="audio-progress-fill" style="width: 52%;"></div>
+</div>
+<!-- Player Controls -->
+<div class="flex items-center justify-between pt-1">
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">replay_10</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-gradient-to-r from-accent-magenta to-secondary text-white flex items-center justify-center shadow-[0_0_18px_rgba(255,119,168,0.5)] active:scale-95 transition-all hover:brightness-110 cursor-pointer" id="play-pause-btn" title="Iniciar o pausar respiración guiada">
+<span class="material-symbols-outlined text-[26px]" id="play-icon" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#B592D9] hover:text-accent-lavender hover:bg-white/5 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">forward_10</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Editorial Pillars -->
+<section class="space-y-space-md">
+<div class="flex flex-col space-y-1">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-accent-magenta font-semibold drop-shadow-[0_0_6px_rgba(255,119,168,0.3)]">Fundamentos</span>
+<h3 class="font-headline-sm text-headline-sm text-[#F7F2FA]">Pilares de introspección</h3>
+</div>
+<div class="space-y-space-sm">
+<!-- Pillar 1 -->
+<div class="bg-surface-container/60 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-sm flex items-start gap-space-md hover:border-[#9D4EDD]/50 transition-colors">
+<div class="w-10 h-10 rounded-full bg-primary-container border border-[#E0AAFF]/40 flex items-center justify-center flex-shrink-0 text-accent-lavender shadow-[0_0_10px_rgba(157,78,221,0.3)]">
+<span class="font-headline-sm text-body-md font-semibold">01</span>
+</div>
+<div class="flex flex-col space-y-0.5">
+<h4 class="font-headline-sm text-headline-sm text-[#F7F2FA] text-base">Prácticas Guiadas</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Meditaciones somáticas y baños sonoros calibrados para devolver el sistema nervioso al centro.
+          </p>
+</div>
+</div>
+<!-- Pillar 2 -->
+<div class="bg-surface-container/60 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-sm flex items-start gap-space-md hover:border-[#9D4EDD]/50 transition-colors">
+<div class="w-10 h-10 rounded-full bg-[#520025] border border-accent-magenta/40 flex items-center justify-center flex-shrink-0 text-accent-magenta shadow-[0_0_10px_rgba(255,119,168,0.3)]">
+<span class="font-headline-sm text-body-md font-semibold">02</span>
+</div>
+<div class="flex flex-col space-y-0.5">
+<h4 class="font-headline-sm text-headline-sm text-[#F7F2FA] text-base">Diario de Claridad</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Preguntas reflexivas y micro-ensayos para desarmar bloqueos y afianzar tu propósito auténtico.
+          </p>
+</div>
+</div>
+<!-- Pillar 3 -->
+<div class="bg-surface-container/60 border border-[#9D4EDD]/25 rounded-xl p-space-md shadow-sm backdrop-blur-sm flex items-start gap-space-md hover:border-[#9D4EDD]/50 transition-colors">
+<div class="w-10 h-10 rounded-full bg-[#2E1052] border border-secondary/40 flex items-center justify-center flex-shrink-0 text-secondary shadow-[0_0_10px_rgba(199,125,255,0.3)]">
+<span class="font-headline-sm text-body-md font-semibold">03</span>
+</div>
+<div class="flex flex-col space-y-0.5">
+<h4 class="font-headline-sm text-headline-sm text-[#F7F2FA] text-base">Sabiduría Atemporal</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Lecturas breves inspiradas en filosofía viva, budismo zen y estoicismo aplicado a la vida diaria.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Community Sanctuary Invitation -->
+<section class="rounded-2xl bg-surface-container/70 border border-[#9D4EDD]/35 p-space-md text-center space-y-space-sm shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl relative overflow-hidden">
+<div class="w-10 h-10 mx-auto rounded-full bg-surface-container-highest border border-accent-magenta/35 flex items-center justify-center shadow-[0_0_14px_rgba(255,119,168,0.35)]">
+<span class="material-symbols-outlined text-accent-magenta text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="space-y-1 max-w-xs mx-auto">
+<h4 class="font-headline-sm text-headline-sm text-[#F7F2FA]">Comunidad Consciente</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Únete a más de 14,000 almas en sintonía compartiendo rituales y reflexiones cada amanecer.
+      </p>
+</div>
+<div class="pt-space-xs flex flex-col gap-space-xs">
+<div class="relative w-full">
+<input class="w-full h-11 px-space-md rounded-full bg-surface-container-lowest/80 border border-[#9D4EDD]/40 text-on-surface font-body-sm text-body-sm placeholder:text-[#B592D9]/60 focus:outline-none focus:border-accent-magenta shadow-inner" id="newsletter-email" placeholder="tu@correo.com" type="email"/>
+</div>
+<button class="cursor-pointer w-full h-11 rounded-full bg-gradient-to-r from-accent-magenta to-secondary hover:brightness-110 text-white font-label-md text-label-md font-semibold tracking-wide shadow-[0_0_18px_rgba(255,119,168,0.4)] transition-all active:scale-98" id="community-btn">
+        Recibir dosis matutina
+      </button>
+<p class="font-label-sm text-label-sm text-accent-lavender opacity-0 transition-opacity pt-1 drop-shadow-[0_0_6px_#E0AAFF]" id="community-feedback">
+        ✦ Bienvenida al santuario interior.
+      </p>
+</div>
+</section>
+</div>
+</main><nav class="fixed bottom-0 w-full z-40 pb-safe bg-[#0F051D]/90 backdrop-blur-xl border-t border-[#9D4EDD]/25 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]" data-active-classes="text-accent-magenta font-semibold"><div class="flex justify-around items-center h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 transition-colors text-accent-magenta font-semibold drop-shadow-[0_0_8px_rgba(255,119,168,0.5)] cursor-pointer" data-path="santuario" href="#"><span class="material-symbols-outlined text-[22px]">spa</span><span class="font-label-sm text-label-sm">Santuario</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="meditacion" href="ExpancionDeConciencia/code.html"><span class="material-symbols-outlined text-[22px]">all_inclusive</span><span class="font-label-sm text-label-sm">Expansión</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="diario" href="#"><span class="material-symbols-outlined text-[22px]">edit_note</span><span class="font-label-sm text-label-sm">Diario</span></a><a class="flex flex-col items-center justify-center min-w-[48px] h-12 gap-0.5 text-[#B592D9] hover:text-accent-lavender transition-colors cursor-pointer" data-path="perfil" href="#"><span class="material-symbols-outlined text-[22px]">nest_clock_farsight_analog</span><span class="font-label-sm text-label-sm">Paz interior</span></a></div></nav>
+<!-- Interactive Journey Portal Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300" id="journey-modal">
+<div class="relative w-full max-w-sm rounded-3xl bg-gradient-to-b from-[#1D1035]/95 via-[#150A26]/95 to-[#0F051D]/98 border border-[#9D4EDD]/45 p-6 shadow-[0_16px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl flex flex-col space-y-5 portal-pulse transform scale-95 transition-transform duration-300" id="journey-modal-card">
+<!-- Header with Close & Ambient Light -->
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2E1052]/60 border border-[#E0AAFF]/20 text-accent-lavender text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-magenta animate-ping"></span>
+<span class="tracking-widest uppercase font-label-sm text-[10px]">Portal de Inmersión</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container-high/80 border border-white/10 flex items-center justify-center text-[#D8CDE4] hover:text-white cursor-pointer active:scale-90 transition-all" id="close-modal-btn">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Title & Mystical Subtitle -->
+<div class="text-center space-y-1.5 pt-1">
+<h3 class="font-headline-sm text-2xl text-[#F7F2FA] font-medium leading-tight">Configura tu Anclaje Interior</h3>
+<p class="font-body-sm text-xs text-[#D8CDE4]/80">Elige la frecuencia con la que deseas armonizar tu mente hoy.</p>
+</div>
+<!-- Anchor Options Radio-like interactive pills -->
+<div class="flex flex-col gap-2.5 pt-1" id="anchors-container">
+<div class="anchor-option active cursor-pointer p-3.5 rounded-2xl bg-gradient-to-r from-accent-magenta/20 to-secondary/15 border-2 border-accent-magenta text-left flex items-center justify-between transition-all duration-200" data-anchor="calma">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-accent-magenta/20 border border-accent-magenta/40 flex items-center justify-center text-accent-magenta">
+<span class="material-symbols-outlined text-[20px]">air</span>
+</div>
+<div>
+<div class="font-headline-sm text-sm font-medium text-white">Tranquilidad &amp; Calma Mental</div>
+<div class="text-[11px] text-[#B592D9]">Frecuencia suave 432 Hz</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-accent-magenta text-[20px] check-icon">check_circle</span>
+</div>
+<div class="anchor-option cursor-pointer p-3.5 rounded-2xl bg-surface-container-high/60 border border-[#9D4EDD]/30 text-left flex items-center justify-between transition-all duration-200 hover:border-accent-lavender/50" data-anchor="claridad">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-[#9D4EDD]/20 border border-[#E0AAFF]/30 flex items-center justify-center text-accent-lavender">
+<span class="material-symbols-outlined text-[20px]">wb_twilight</span>
+</div>
+<div>
+<div class="font-headline-sm text-sm font-medium text-[#F7F2FA]">Claridad &amp; Dirección Interior</div>
+<div class="text-[11px] text-[#B592D9]">Vibración focal 528 Hz</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#7B629E] text-[20px] check-icon opacity-40">radio_button_unchecked</span>
+</div>
+<div class="anchor-option cursor-pointer p-3.5 rounded-2xl bg-surface-container-high/60 border border-[#9D4EDD]/30 text-left flex items-center justify-between transition-all duration-200 hover:border-accent-lavender/50" data-anchor="expansion">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-[#2E1052]/60 border border-secondary/40 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+</div>
+<div>
+<div class="font-headline-sm text-sm font-medium text-[#F7F2FA]">Expansión &amp; Consciencia Plena</div>
+<div class="text-[11px] text-[#B592D9]">Resonancia infinita 639 Hz</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#7B629E] text-[20px] check-icon opacity-40">radio_button_unchecked</span>
+</div>
+</div>
+<!-- Enter Sanctuary Button -->
+<div class="pt-2">
+<button class="cursor-pointer w-full h-12 rounded-full bg-gradient-to-r from-accent-magenta via-secondary to-accent-lavender text-[#0F051D] font-label-md text-sm font-bold tracking-wider uppercase shadow-[0_0_24px_rgba(255,119,168,0.5)] hover:shadow-[0_0_32px_rgba(255,119,168,0.8)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2" id="enter-sanctuary-btn">
+<span>Entrar al Santuario Ahora</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Sacred Toast Notification -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none transform -translate-y-6 opacity-0 transition-all duration-400 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#1D1035]/95 border border-accent-magenta/60 text-white shadow-[0_0_24px_rgba(255,119,168,0.55)] backdrop-blur-xl" id="sacred-toast">
+<span class="material-symbols-outlined text-accent-magenta text-[20px] animate-spin" style="animation-duration: 4s;">spa</span>
+<span class="font-label-sm text-xs tracking-wide font-medium" id="toast-message">✦ Portal de Inmersión activado</span>
+</div>
+<script>
+  (function() {
+    // --- Synthesized Tibetan Bell / Harmonic Singing Bowl Sound (Web Audio API) ---
+    let audioCtx = null;
+    function playHarmonicBell(freq = 432) {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        if (!audioCtx) {
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const now = audioCtx.currentTime;
+        const masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.3, now);
+        masterGain.connect(audioCtx.destination);
+
+        // Harmonics configuration mimicking a gentle Tibetan singing bowl / meditation chime
+        const harmonics = [
+          { mult: 1, gain: 0.7, decay: 2.8 },
+          { mult: 2.76, gain: 0.25, decay: 2.2 },
+          { mult: 5.4, gain: 0.12, decay: 1.4 }
+        ];
+
+        harmonics.forEach(h => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq * h.mult, now);
+          
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(h.gain, now + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + h.decay);
+
+          osc.connect(gain);
+          gain.connect(masterGain);
+
+          osc.start(now);
+          osc.stop(now + h.decay);
+        });
+      } catch (e) {
+        console.warn('AudioContext init prevented:', e);
+      }
+    }
+
+    // --- Interactive Journey Portal Modal Logic ---
+    const headerJourneyBtn = document.getElementById('header-journey-btn');
+    const heroJourneyBtn = document.getElementById('hero-journey-btn');
+    const journeyModal = document.getElementById('journey-modal');
+    const journeyModalCard = document.getElementById('journey-modal-card');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const enterSanctuaryBtn = document.getElementById('enter-sanctuary-btn');
+    const sacredToast = document.getElementById('sacred-toast');
+    const toastMessage = document.getElementById('toast-message');
+    const guideAudioBtn = document.getElementById('guide-audio-btn');
+
+    let currentAnchorFreq = 432;
+    let currentAnchorName = 'Tranquilidad y Calma Mental';
+    let currentAnchorType = 'calma';
+
+    function showSacredToast(text) {
+      if (!sacredToast) return;
+      if (text && toastMessage) toastMessage.textContent = text;
+      sacredToast.classList.remove('opacity-0', '-translate-y-6', 'pointer-events-none');
+      sacredToast.classList.add('opacity-100', 'translate-y-0');
+      
+      setTimeout(() => {
+        sacredToast.classList.remove('opacity-100', 'translate-y-0');
+        sacredToast.classList.add('opacity-0', '-translate-y-6', 'pointer-events-none');
+      }, 3200);
+    }
+
+    function createCosmicRipple(e, targetBtn) {
+      const rect = targetBtn.getBoundingClientRect();
+      const wave = document.createElement('span');
+      const size = Math.max(rect.width, rect.height) * 1.6;
+      const x = (e.clientX || rect.left + rect.width / 2) - rect.left - size / 2;
+      const y = (e.clientY || rect.top + rect.height / 2) - rect.top - size / 2;
+
+      wave.style.width = size + 'px';
+      wave.style.height = size + 'px';
+      wave.style.left = x + 'px';
+      wave.style.top = y + 'px';
+      wave.className = 'absolute rounded-full bg-white/40 pointer-events-none cosmic-ripple-wave';
+      targetBtn.appendChild(wave);
+
+      setTimeout(() => wave.remove(), 900);
+    }
+
+    function openJourneyModal(e, triggerBtn) {
+      if (e) e.preventDefault();
+      if (triggerBtn) createCosmicRipple(e, triggerBtn);
+
+      playHarmonicBell(currentAnchorFreq);
+
+      // Trigger subtle tactile body vibration if supported
+      if (navigator.vibrate) {
+        try { navigator.vibrate([40, 60, 40]); } catch(err){}
+      }
+
+      if (journeyModal && journeyModalCard) {
+        journeyModal.classList.remove('opacity-0', 'pointer-events-none');
+        journeyModal.classList.add('opacity-100', 'pointer-events-auto');
+        journeyModalCard.classList.remove('scale-95');
+        journeyModalCard.classList.add('scale-100');
+      }
+    }
+
+    function closeJourneyModal() {
+      if (journeyModal && journeyModalCard) {
+        journeyModalCard.classList.remove('scale-100');
+        journeyModalCard.classList.add('scale-95');
+        journeyModal.classList.remove('opacity-100', 'pointer-events-auto');
+        journeyModal.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    if (headerJourneyBtn) {
+      headerJourneyBtn.addEventListener('click', (e) => openJourneyModal(e, headerJourneyBtn));
+    }
+    if (heroJourneyBtn) {
+      heroJourneyBtn.addEventListener('click', (e) => openJourneyModal(e, heroJourneyBtn));
+    }
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', closeJourneyModal);
+    }
+    if (journeyModal) {
+      journeyModal.addEventListener('click', (e) => {
+        if (e.target === journeyModal) closeJourneyModal();
+      });
+    }
+
+    // Anchor Selection handlers
+    const anchorOptions = document.querySelectorAll('.anchor-option');
+    anchorOptions.forEach(opt => {
+      opt.addEventListener('click', function() {
+        anchorOptions.forEach(o => {
+          o.classList.remove('active', 'border-accent-magenta', 'bg-gradient-to-r', 'from-accent-magenta/20', 'to-secondary/15');
+          o.classList.add('border-[#9D4EDD]/30', 'bg-surface-container-high/60');
+          const check = o.querySelector('.check-icon');
+          if (check) {
+            check.textContent = 'radio_button_unchecked';
+            check.className = 'material-symbols-outlined text-[#7B629E] text-[20px] check-icon opacity-40';
+          }
+        });
+
+        opt.classList.add('active', 'border-accent-magenta', 'bg-gradient-to-r', 'from-accent-magenta/20', 'to-secondary/15');
+        opt.classList.remove('border-[#9D4EDD]/30', 'bg-surface-container-high/60');
+        const activeCheck = opt.querySelector('.check-icon');
+        if (activeCheck) {
+          activeCheck.textContent = 'check_circle';
+          activeCheck.className = 'material-symbols-outlined text-accent-magenta text-[20px] check-icon';
+        }
+
+        const type = opt.getAttribute('data-anchor');
+        currentAnchorType = type;
+        if (type === 'calma') {
+          currentAnchorFreq = 432;
+          currentAnchorName = 'Tranquilidad y Calma Mental';
+        } else if (type === 'claridad') {
+          currentAnchorFreq = 528;
+          currentAnchorName = 'Claridad y Dirección Interior';
+        } else {
+          currentAnchorFreq = 639;
+          currentAnchorName = 'Expansión y Consciencia Plena';
+        }
+
+        playHarmonicBell(currentAnchorFreq);
+      });
+    });
+
+    if (enterSanctuaryBtn) {
+      enterSanctuaryBtn.addEventListener('click', function(e) {
+        createCosmicRipple(e, enterSanctuaryBtn);
+        playHarmonicBell(currentAnchorFreq || 639);
+
+        if (currentAnchorType === 'expansion') {
+          showSacredToast('✦ Viajando a Expansión & Consciencia Plena...');
+          setTimeout(() => {
+            window.location.href = 'ExpancionDeConciencia/code.html';
+          }, 450);
+          return;
+        }
+
+        closeJourneyModal();
+
+        // Scroll gracefully to breathwork ritual
+        const showcase = document.querySelector('section:nth-of-type(2)');
+        if (showcase) {
+          showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        showSacredToast('✦ Portal de Inmersión activado: ' + currentAnchorName);
+      });
+    }
+
+    if (guideAudioBtn) {
+      guideAudioBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        playHarmonicBell(432);
+        showSacredToast('✦ Guía de inmersión iniciada (432Hz)');
+      });
+    }
+
+    // --- Breathwork Interactive Engine ---
+    const orbContainer = document.getElementById('breath-orb-container');
+    const orbCore = document.getElementById('orb-core');
+    const orbMidGlow = document.getElementById('orb-mid-glow');
+    const orbOuterGlow = document.getElementById('orb-outer-glow');
+    const phaseText = document.getElementById('breath-phase-text');
+    const countdownEl = document.getElementById('breath-countdown');
+    const orbStatusDot = document.getElementById('orb-status-dot');
+    const orbStatusText = document.getElementById('orb-status-text');
+    const orbIcon = document.getElementById('orb-icon');
+    const modeBoxBtn = document.getElementById('mode-box-btn');
+    const modeCalmBtn = document.getElementById('mode-calm-btn');
+
+    // Audio Player Elements
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const playIcon = document.getElementById('play-icon');
+    const progressFill = document.getElementById('audio-progress-fill');
+    const currentTimeEl = document.getElementById('player-current-time');
+
+    // Breathing patterns: [ { name, duration, scale, icon } ]
+    const boxPattern = [
+      { name: 'Inhala', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'north' },
+      { name: 'Sostén', duration: 4, scale: 1.28, glowScale: 1.35, icon: 'pause' },
+      { name: 'Exhala', duration: 4, scale: 0.90, glowScale: 0.95, icon: 'south' },
+      { name: 'Pausa',  duration: 4, scale: 0.90, glowScale: 0.95, icon: 'horizontal_rule' }
+    ];
+
+    const calmPattern = [
+      { name: 'Inhala', duration: 4, scale: 1.30, glowScale: 1.40, icon: 'north' },
+      { name: 'Sostén', duration: 7, scale: 1.30, glowScale: 1.40, icon: 'pause' },
+      { name: 'Exhala', duration: 8, scale: 0.88, glowScale: 0.92, icon: 'south' }
+    ];
+
+    let currentPattern = boxPattern;
+    let currentStepIdx = 0;
+    let remainingStepSeconds = currentPattern[0].duration;
+    let cycleCount = 1;
+    let isPlaying = true;
+    let breathTimer = null;
+
+    function applyPhaseTransition(step) {
+      if (!orbCore) return;
+      const durationMs = step.duration * 1000;
+      orbCore.style.transitionDuration = durationMs + 'ms';
+      orbMidGlow.style.transitionDuration = durationMs + 'ms';
+      orbOuterGlow.style.transitionDuration = durationMs + 'ms';
+
+      orbCore.style.transform = `scale(${step.scale})`;
+      orbMidGlow.style.transform = `scale(${step.glowScale})`;
+      orbOuterGlow.style.transform = `scale(${step.glowScale * 1.15})`;
+
+      phaseText.textContent = step.name;
+      orbIcon.textContent = step.icon;
+      countdownEl.textContent = remainingStepSeconds + 's';
+    }
+
+    function tickBreath() {
+      if (!isPlaying) return;
+
+      countdownEl.textContent = remainingStepSeconds + 's';
+      remainingStepSeconds--;
+
+      if (remainingStepSeconds < 0) {
+        currentStepIdx = (currentStepIdx + 1) % currentPattern.length;
+        if (currentStepIdx === 0) {
+          cycleCount++;
+          if (orbStatusText) orbStatusText.textContent = `Ciclo ${cycleCount} • Activo`;
+        }
+        const nextStep = currentPattern[currentStepIdx];
+        remainingStepSeconds = nextStep.duration;
+        applyPhaseTransition(nextStep);
+      }
+    }
+
+    function startBreathing() {
+      if (breathTimer) clearInterval(breathTimer);
+      applyPhaseTransition(currentPattern[currentStepIdx]);
+      breathTimer = setInterval(tickBreath, 1000);
+      if (orbStatusDot) {
+        orbStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-accent-magenta shadow-[0_0_6px_#FF77A8] animate-pulse';
+      }
+      if (orbStatusText) orbStatusText.textContent = `Ciclo ${cycleCount} • Activo`;
+    }
+
+    function pauseBreathing() {
+      if (breathTimer) clearInterval(breathTimer);
+      if (orbCore) {
+        orbCore.style.transitionDuration = '500ms';
+        orbMidGlow.style.transitionDuration = '500ms';
+        orbOuterGlow.style.transitionDuration = '500ms';
+      }
+      if (orbStatusDot) {
+        orbStatusDot.className = 'w-1.5 h-1.5 rounded-full bg-[#7B629E]';
+      }
+      if (orbStatusText) orbStatusText.textContent = 'En pausa • Toca para continuar';
+      phaseText.textContent = 'Pausa';
+      orbIcon.textContent = 'play_arrow';
+    }
+
+    function togglePlayback() {
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        if (playIcon) playIcon.textContent = 'pause';
+        startBreathing();
+      } else {
+        if (playIcon) playIcon.textContent = 'play_arrow';
+        pauseBreathing();
+      }
+    }
+
+    // Connect Orb Click & Main Audio Button
+    if (orbContainer) {
+      orbContainer.addEventListener('click', togglePlayback);
+    }
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener('click', togglePlayback);
+    }
+
+    // Pattern Switchers
+    function setPattern(pattern, isBox) {
+      currentPattern = pattern;
+      currentStepIdx = 0;
+      remainingStepSeconds = currentPattern[0].duration;
+      cycleCount = 1;
+
+      if (isBox) {
+        modeBoxBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer';
+        modeCalmBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/80 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer';
+      } else {
+        modeCalmBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-gradient-to-r from-accent-magenta/90 to-secondary text-white font-semibold shadow-[0_0_12px_rgba(255,119,168,0.35)] border border-accent-magenta/40 cursor-pointer';
+        modeBoxBtn.className = 'px-3 py-1 rounded-full text-label-sm font-label-sm transition-all bg-surface-container-high/80 border border-[#9D4EDD]/30 text-[#B592D9] hover:text-on-surface cursor-pointer';
+      }
+
+      if (isPlaying) {
+        startBreathing();
+      } else {
+        applyPhaseTransition(currentPattern[0]);
+      }
+    }
+
+    if (modeBoxBtn) {
+      modeBoxBtn.addEventListener('click', () => setPattern(boxPattern, true));
+    }
+    if (modeCalmBtn) {
+      modeCalmBtn.addEventListener('click', () => setPattern(calmPattern, false));
+    }
+
+    // Initial Breathwork Start
+    startBreathing();
+
+    // Audio Scrubber Simulation
+    const scrubber = document.getElementById('audio-scrubber');
+    if (scrubber && progressFill && currentTimeEl) {
+      scrubber.addEventListener('click', function(e) {
+        const rect = scrubber.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+        const percentage = Math.round(ratio * 100);
+        progressFill.style.width = percentage + '%';
+
+        const totalSeconds = 420; // 07:00
+        const newSec = Math.floor(ratio * totalSeconds);
+        const mins = Math.floor(newSec / 60).toString().padStart(2, '0');
+        const secs = (newSec % 60).toString().padStart(2, '0');
+        currentTimeEl.textContent = mins + ':' + secs;
+      });
+    }
+
+    // Community Signup Feedback
+    const commBtn = document.getElementById('community-btn');
+    const commFeedback = document.getElementById('community-feedback');
+    const commInput = document.getElementById('newsletter-email');
+
+    if (commBtn && commFeedback && commInput) {
+      commBtn.addEventListener('click', function() {
+        if (commInput.value.trim() !== '') {
+          playHarmonicBell(528);
+          commFeedback.classList.remove('opacity-0');
+          commFeedback.classList.add('opacity-100');
+          commBtn.textContent = 'Inscrito con paz';
+          commBtn.disabled = true;
+        } else {
+          commInput.focus();
+        }
+      });
+    }
+  })();
+</script></body></html>
